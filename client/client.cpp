@@ -94,7 +94,7 @@
  	// Obtain server address
  	hp = gethostbyname(serverName);
  	// copy address from hp into server struct
- 	bcopy(hp->h_addr,&(server.sin_addr), hp->h_length);
+ 	memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
  	server.sin_family = AF_INET; // Set family to internet protocol
  	server.sin_port = htons(SERVER_PORT_NUM); // htons short int from host -> network byte order
  	return server;
