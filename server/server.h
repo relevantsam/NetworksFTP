@@ -23,11 +23,9 @@
 
  int initSocket();
 
- sockaddr_in getServerAddr(char* serverName);
+ void runServer();
 
  void closeSocket(int sd);
-
- int sendGETRequest(int sd, sockaddr_in to, char* fileName);
 
  int validation(struct packet);
 
