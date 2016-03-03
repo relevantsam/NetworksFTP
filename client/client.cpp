@@ -28,8 +28,15 @@
  *  
  */
 
+ // INCLUDE SOCKET REQUIREMENTS
  #include <sys/socket.h>
  #include <netinet/in.h>
  #include <arpa/inet.h>
+ // Other incldues
+ #include <iostream>
+
+ int main() {
+ 	std::cout << "Hello World";
+ }
 
  
