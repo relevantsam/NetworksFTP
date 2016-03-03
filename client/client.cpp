@@ -114,6 +114,6 @@
 	 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
 	 	sleep(2);
 	 }
- 	return sending;
+ 	return 1;
  }
  
