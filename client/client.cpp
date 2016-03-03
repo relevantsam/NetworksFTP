@@ -64,7 +64,7 @@
  		hp = gethostbyname(serverName);
  		memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
 	 	for(;;) {
-		 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
+		 	sendto(sd, "HI", 2, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
 		 	cout << "Sending hi" << endl;
 		 	sleep(2);
 		}
