@@ -40,9 +40,9 @@
  using namespace std;
 
  // Main running function to receive commandline arguments
- int main(int argc, char *arg[]) {
- 	if(argv == 2) {
- 		cout << arg[0] << " " << arg[1];
+ int main(int argc, char *argv[]) {
+ 	if(argc == 2) {
+ 		cout << argv[0] << " " << argv[1];
  	}
  }
 
