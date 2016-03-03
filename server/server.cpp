@@ -30,7 +30,7 @@
  	for(;;) {
  		int n = recv (socketID, buf, sizeof(buf), 0);
  		buf[n] = '\0';
- 		printf("%s\n", buf);
+ 		cout << buf;
  	}
  	closeSocket(socketID);
  	return 0;
