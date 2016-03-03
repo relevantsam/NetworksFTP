@@ -44,7 +44,7 @@
  using namespace std;
 
  // Main running function to receive commandline arguments
- int main(int argc, char **argv[]) {
+ int main(int argc, char *argv[]) {
  	if(argc == NUM_ARGS - 1) { // check for expected number of inputs
  		// Change to readable names
  		char * serverName = argv[1]; 
