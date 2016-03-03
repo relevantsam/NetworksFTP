@@ -1,3 +1,0 @@
-/*
- * FTP SERVER HEADER
- */
