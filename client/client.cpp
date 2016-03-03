@@ -45,35 +45,37 @@
 
  // Main running function to receive commandline arguments
  int main(int argc, char *argv[]) {
- 	if(argc == NUM_ARGS - 1) { // check for expected number of inputs
+ 	//if(argc == NUM_ARGS - 1) { // check for expected number of inputs
  		// Change to readable names
- 		char * serverName = argv[1]; 
- 		cout << serverName;
+ 		//char * serverName = argv[1];
  		//char * fileName = argv[2];
- 		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
+ 		//cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
  		//int socketID = initSocket();
  		//sockaddr_in server = getServerAddr(serverName);
  		//int get = sendGETRequest(socketID, server, fileName);
  		//closeSocket(socketID);
 
- 		int sd = socket(AF_INET, SOCK_DGRAM, 0);
+ 		int sd;
  		struct sockaddr_in server;
  		struct hostent *hp;
+
+		sd = socket(AF_INET, SOCK_DGRAM, 0);
+
  		server.sin_family = AF_INET;
- 		server.sin_port = htons(SERVER_PORT_NUM);
- 		hp = gethostbyname(serverName);
+ 		server.sin_port = htons(10072);
+ 		hp = gethostbyname(argv[1]);
+
  		memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
 	 	for(;;) {
 		 	sendto(sd, "HI", 2, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
-		 	cout << "Sending hi" << endl;
 		 	sleep(2);
 		}
 		close(sd);
- 		cout << 1 << endl;
- 	} else {
+ 		//cout << 1 << endl;
+ 	//} else {
  		// Output usage
- 		cout << "ERROR: Expected usage for BTP is with " << NUM_ARGS << " arguments: <Program Name> <Server IP> <Requested File Name>" << endl;
- 	}
+ 	//	cout << "ERROR: Expected usage for BTP is with " << NUM_ARGS << " arguments: <Program Name> <Server IP> <Requested File Name>" << endl;
+ 	//}
  	return 0;
  }
 
