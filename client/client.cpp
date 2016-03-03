@@ -29,11 +29,12 @@
  */
 
  // INCLUDE SOCKET REQUIREMENTS
- #include <sys/types.h>
- #include <sys/socket.h>
- #include <netinet/in.h>
- #include <arpa/inet.h>
- #include <netdb.h>
+ #include <sys/types.h> // Basic sys data types
+ #include <sys/socket.h> // Basic socked definitions
+ #include <netinet/in.h> // Basic internet definitiions
+ #include <arpa/inet.h> 
+ #include <netdb.h> // Needed for obtaining server address
+ #include <unistd.h> // Needed to close socket
  // Include header file
  #include "client.h"
  // Other incldues
@@ -44,23 +45,34 @@
  // Main running function to receive commandline arguments
  int main(int argc, char *argv[]) {
  	if(argc == NUM_ARGS) { // check for expected number of inputs
+ 		// Change to readable names
+ 		char * serverName = argv[1]; 
+ 		char * fileName = argv[2];
  		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
- 		int get = sendGETRequest(argv[1]);
- 		cout << to_string(get) << endl;
+ 		int socketID = initSocket();
+ 		sockaddr_in server = getServerAddr(serverName);
+ 		int get = sendGETRequest(socketID, server, fileName);
+ 		closeSocket(socketID);
+ 		cout << get << endl;
  	} else {
  		// Output usage
- 		cout << "ERROR: Expected usage is with " << to_string(NUM_ARGS) << " arguments." << endl;
+ 		cout << "ERROR: Expected usage for BTP is with " << NUM_ARGS << " arguments: <Program Name> <Server IP> <Requested File Name>" << endl;
  	}
  	return 0;
  }
- 
- // Function to send get request to server program. 
- int sendGETRequest(char* fileName) {
- 	cout << "Sending GET request for file " << fileName << endl;
+
+ int initSocket() {
+ 	/*
+ 	 * Declare variables
+ 	 */
  	// sd is an int representing socket or -1 if socket failed
  	int sd;
- 	// Create a structure modeling the client machine
+ 	// Structure modeling the client machine
  	struct sockaddr_in client;
+
+ 	/* 
+ 	 * Fill client socket
+ 	 */
  	// AF_INET is internet protocol
  	client.sin_family = AF_INET;
  	// Assigns address to IP address of machine
@@ -72,5 +84,32 @@
  	// Associate socket with local machine
  	bind(sd, (struct sockaddr *)&client, sizeof(client));
  	return sd;
+ }
+
+ sockaddr_in getServerAddr(char* serverName) {
+ 	// Represents host
+ 	struct hostent *hp;
+ 	// Structure modeling server
+ 	struct sockaddr_in server;
+ 	// Obtain server address
+ 	hp = gethostbyname(serverName);
+ 	// copy address from hp into server struct
+ 	bcopy(hp->h_addr,&(server.sin_addr), hp->h_length);
+ 	server.sin_family = AF_INET; // Set family to internet protocol
+ 	server.sin_port = htons(SERVER_PORT_NUM); // htons short int from host -> network byte order
+ 	return server;
+ }
+ 
+ void closeSocket(int sd) {
+ 	close(sd); // Need to close at other end as well
+ }
+
+ // Function to send get request to server program. 
+ int sendGETRequest(int sd, sockaddr_in to, char* fileName) {
+ 	cout << "BTP Sending GET request for file " << fileName << endl;
+ 	char *buffer = "Sample message";
+ 	// Send a message! How exciting
+ 	int sending = sendto(sd, &buffer, sizeof(buffer), 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
+ 	return sending;
  }
  
