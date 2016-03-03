@@ -63,12 +63,12 @@
  		hp = gethostbyname(serverName);
  		memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
 	 	for(;;) {
-		 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
+		 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
 		 	cout << "Sending hi" << endl;
 		 	sleep(2);
 		}
 		close(sd);
- 		cout << get << endl;
+ 		cout << 1 << endl;
  	} else {
  		// Output usage
  		cout << "ERROR: Expected usage for BTP is with " << NUM_ARGS << " arguments: <Program Name> <Server IP> <Requested File Name>" << endl;
