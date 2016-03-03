@@ -110,7 +110,10 @@
  	cout << "BTP Sending GET request for file " << fileName << endl;
  	char *buffer = "Sample message";
  	// Send a message! How exciting
- 	int sending = sendto(sd, "hi!", sizeof(buffer), 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
+ 	for(;;) {
+	 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
+	 	sleep(2);
+	 }
  	return sending;
  }
  
