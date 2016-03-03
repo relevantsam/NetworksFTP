@@ -44,11 +44,12 @@
  using namespace std;
 
  // Main running function to receive commandline arguments
- int main(int argc, char *argv[]) {
- 	if(argc == NUM_ARGS) { // check for expected number of inputs
+ int main(int argc, char **argv[]) {
+ 	if(argc == NUM_ARGS - 1) { // check for expected number of inputs
  		// Change to readable names
  		char * serverName = argv[1]; 
- 		char * fileName = argv[2];
+ 		cout << serverName;
+ 		//char * fileName = argv[2];
  		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
  		//int socketID = initSocket();
  		//sockaddr_in server = getServerAddr(serverName);
