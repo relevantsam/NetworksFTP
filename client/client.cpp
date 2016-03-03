@@ -50,10 +50,24 @@
  		char * serverName = argv[1]; 
  		char * fileName = argv[2];
  		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
- 		int socketID = initSocket();
- 		sockaddr_in server = getServerAddr(serverName);
- 		int get = sendGETRequest(socketID, server, fileName);
- 		closeSocket(socketID);
+ 		//int socketID = initSocket();
+ 		//sockaddr_in server = getServerAddr(serverName);
+ 		//int get = sendGETRequest(socketID, server, fileName);
+ 		//closeSocket(socketID);
+
+ 		int sd = socket(AF_INET, SOCK_DGRAM, 0);
+ 		struct sockaddr_in server;
+ 		struct hostent *hp;
+ 		server.sin_family = AF_INET;
+ 		server.sin_port = htons(SERVER_PORT_NUM);
+ 		hp = gethostbyname(serverName);
+ 		memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
+	 	for(;;) {
+		 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
+		 	cout << "Sending hi" << endl;
+		 	sleep(2);
+		}
+		close(sd);
  		cout << get << endl;
  	} else {
  		// Output usage
@@ -112,6 +126,7 @@
  	// Send a message! How exciting
  	for(;;) {
 	 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
+	 	cout << "Sending hi" << endl;
 	 	sleep(2);
 	 }
  	return 1;
