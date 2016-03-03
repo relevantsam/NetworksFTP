@@ -29,9 +29,11 @@
  */
 
  // INCLUDE SOCKET REQUIREMENTS
+ #include <sys/types.h>
  #include <sys/socket.h>
  #include <netinet/in.h>
  #include <arpa/inet.h>
+ #include <netdb.h>
  // Include header file
  #include "client.h"
  // Other incldues
@@ -41,9 +43,34 @@
 
  // Main running function to receive commandline arguments
  int main(int argc, char *argv[]) {
- 	if(argc == 2) {
- 		cout << argv[0] << " " << argv[1];
+ 	if(argc == NUM_ARGS) { // check for expected number of inputs
+ 		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
+ 		int get = sendGETRequest(argv[1]);
+ 		cout << to_string(get) << endl;
+ 	} else {
+ 		// Output usage
+ 		cout << "ERROR: Expected usage is with " << to_string(NUM_ARGS) << " arguments." << endl;
  	}
+ 	return 0;
  }
-
+ 
+ // Function to send get request to server program. 
+ int sendGETRequest(char* fileName) {
+ 	cout << "Sending GET request for file " << fileName << endl;
+ 	// sd is an int representing socket or -1 if socket failed
+ 	int sd;
+ 	// Create a structure modeling the client machine
+ 	struct sockaddr_in client;
+ 	// AF_INET is internet protocol
+ 	client.sin_family = AF_INET;
+ 	// Assigns address to IP address of machine
+ 	client.sin_addr.s_addr = htonl(INADDR_ANY); // htonl takes long int from host to network byte order
+ 	// Assigns port number to port number specified in head file 
+ 	client.sin_port = htons(CLIENT_PORT_NUM); // htons takes short int from host to network byte order
+ 	// AF_INET is internet protocol, SOCK_DGRAM is UDP, 0 selects protocol
+ 	sd = socket(AF_INET, SOCK_DGRAM, 0);
+ 	// Associate socket with local machine
+ 	bind(sd, (struct sockaddr *)&client, sizeof(client));
+ 	return sd;
+ }
  
