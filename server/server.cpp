@@ -34,11 +34,11 @@
  	sd = socket(AF_INET, SOCK_DGRAM, 0);
  	// Associate socket with local machine
  	bind(sd, (struct sockaddr *)&server, sizeof(server));
-
+ 	cout << "SERVER RUNNING" << endl;
  	for(;;) {
  		n = recv (sd, buf, sizeof(buf), 0);
  		buf[n] = '\0';
- 		cout << "RECEIVED";
+ 		cout << "RECEIVED MESSAGE";
  		cout << buf;
  	}
  	close(sd);
