@@ -32,11 +32,17 @@
  #include <sys/socket.h>
  #include <netinet/in.h>
  #include <arpa/inet.h>
+ // Include header file
+ #include "client.h"
  // Other incldues
  #include <iostream>
+ // For now we will stay with std namespace
+ using namespace std;
 
- int main() {
- 	std::cout << "Hello World";
+ // Main running function to receive commandline arguments
+ int main(int argc, char *arg[]) {
+ 	cout << argc;
+ 	cout << arg[1] + " - " + arg[0]
  }
 
  
