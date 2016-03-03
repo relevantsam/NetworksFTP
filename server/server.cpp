@@ -22,17 +22,26 @@
  using namespace std;
 
  int main(int argc, char *argv[]) {
- 	int socketID;
+ 	int sd, n;
+ 	struct sockaddr_in server;
  	char buf[512];
+	server.sin_family = AF_INET;
+ 	// Assigns address to IP address of machine
+ 	server.sin_addr.s_addr = htonl(INADDR_ANY); // htonl takes long int from host to network byte order
+ 	// Assigns port number to port number specified in head file 
+ 	server.sin_port = htons(SERVER_PORT_NUM); // htons takes short int from host to network byte order
 
- 	socketID = initSocket();
- 	runServer();
+ 	sd = socket(AF_INET, SOCK_DGRAM, 0);
+ 	// Associate socket with local machine
+ 	bind(sd, (struct sockaddr *)&server, sizeof(server));
+
  	for(;;) {
- 		int n = recv (socketID, buf, sizeof(buf), 0);
+ 		n = recv (sd, buf, sizeof(buf), 0);
  		buf[n] = '\0';
+ 		cout << "RECEIVED";
  		cout << buf;
  	}
- 	closeSocket(socketID);
+ 	close(sd);
  	return 0;
  }
 
