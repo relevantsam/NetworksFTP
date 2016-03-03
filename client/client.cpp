@@ -41,8 +41,9 @@
 
  // Main running function to receive commandline arguments
  int main(int argc, char *arg[]) {
- 	cout << argc;
- 	cout << arg[1] + " - " + arg[0]
+ 	if(argv == 2) {
+ 		cout << arg[0] << " " << arg[1];
+ 	}
  }
 
  
