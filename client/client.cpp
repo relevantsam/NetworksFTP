@@ -49,7 +49,7 @@
  		// Change to readable names
  		//char * serverName = argv[1];
  		//char * fileName = argv[2];
- 		//cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
+ 		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
  		//int socketID = initSocket();
  		//sockaddr_in server = getServerAddr(serverName);
  		//int get = sendGETRequest(socketID, server, fileName);
