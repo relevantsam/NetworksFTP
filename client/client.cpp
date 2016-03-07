@@ -39,7 +39,7 @@
  #include "client.h"
  // Other incldues
  #include <iostream>
- #include <string>
+ #include <string.h>
  // For now we will stay with std namespace
  using namespace std;
 
