@@ -39,7 +39,7 @@
  #include "client.h"
  // Other incldues
  #include <iostream>
- #include <cstring>
+ #include <string>
  // For now we will stay with std namespace
  using namespace std;
 
@@ -59,11 +59,19 @@
  		struct sockaddr_in server;
  		struct hostent *hp;
 
-		sd = socket(AF_INET, SOCK_DGRAM, 0);
+ 		string ip = string("131.204.14.175/24");
+ 		int port = CLIENT_PORT_NUM;
+
+		//sd = socket(AF_INET, SOCK_DGRAM, 0);
+		if((sd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) { // Let's try the IPPROTO_UDP thing
+			cout << "Socket failure." << endl;
+			return 1;
+		}
 
  		server.sin_family = AF_INET;
- 		server.sin_port = htons(10072);
- 		hp = gethostbyname(argv[1]);
+ 		server.sin_port = htons(10073);
+ 		//hp = gethostbyname(argv[1]);
+ 		hp = gethostbyname(ip.c_str());
 
  		memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
 	 	for(;;) {
