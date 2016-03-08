@@ -52,9 +52,14 @@
  		cout << "Socket successfully bound to client." << endl;
  	}
 
+ 	cout << endl << "============================" << endl << "+      CLIENT RUNNING      +" << endl << "============================" << endl;
+
+
  	// Send a get request
 	if(!sendGet(s, fileName, (struct sockaddr *)&server, sizeof(server))) {
 		cout << "Sending GET request failed. Quiting." << endl;
+	} else {
+		cout << "GET request sent for file " << fileName << endl;
 	}
 
 	// Get the file
@@ -95,7 +100,6 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	ofstream output;
 	fileName += ".txt";
 	output.open(fileName.c_str());
-	output << "Preping to receive" << endl;
 	for(;;) {
 		byte packet[PACKETSIZE];
 		recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags

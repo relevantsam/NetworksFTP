@@ -18,19 +18,16 @@
  // Other incldues
  #include <iostream>
  #include <cstring>
+ #include <fstream>
  // For now we will stay with std namespace
  using namespace std;
 
  int main(int argc, char *argv[]) {
  	int sock, n;
  	struct sockaddr_in server;
- 	char buf[512];
-
-	server.sin_family = AF_INET;
- 	// Assigns address to IP address of machine
- 	server.sin_addr.s_addr = htonl(INADDR_ANY); // htonl takes long int from host to network byte order
- 	// Assigns port number to port number specified in head file 
- 	server.sin_port = htons(10072); // htons takes short int from host to network byte order
+ 	struct sockaddr_in client;
+ 	byte buf[240];
+	fstream file;
 
  	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
  		cout << "Socket creation failed." << endl;
@@ -45,6 +42,8 @@
  	server.sin_addr.s_addr = htonl(INADDR_ANY);
  	server.sin_port = htons(SERVER_PORT_NUM);
 
+ 	cout << "Server allocated" << endl;
+
 
  	// Associate socket with server
  	if(bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
@@ -53,14 +52,40 @@
  	} else {
  		cout << "Socket bound to server." << endl << endl;
  	}
- 	//cout << "SERVER RUNNING" << endl;
- 	int i = 1;
+ 	
+ 	cout << "============================" << endl << "+      SERVER RUNNING      +" << endl << "============================" << endl;
+ 	string fileName;
  	for(;;) {
- 		n = recv(sock, buf, sizeof(buf), 0);
+ 		n = recvfrom(sock, buf, sizeof(buf), 0, (struct sockaddr *)&client, (socklen_t *)sizeof(client));
  		buf[n] = '\0';
- 		cout << "Message " << i << ": " << buf << endl;
- 		i++;
+ 		char * msg = strtok((char *)buf, " ");
+		string word = msg;
+		if(word == "GET") {
+			cout << "GET REQUEST RECEIVED" << endl;
+ 			msg = strtok(NULL, " ");
+ 			fileName = msg;
+ 			cout << "Request for " << fileName << endl;
+ 			break;
+		} else {
+			cout << "Request rejected." << endl;
+		}
  	}
+
+ 	file.open(fileName.c_str(), fstream::in | fstream::binary);
+ 	if(!file.is_open()) {
+ 		cout << "File failed to open." << fileName << endl;
+ 		return 0;
+ 	} else {
+ 		cout << "File opened" << endl;
+ 	}
+ 	while(!file.eof()) {
+ 		cout << "Reading line: "<< endl;
+		file.read((char *)buf, 240);
+		cout << buf << endl;
+		cout << "Sending to " << inet_ntoa(client.sin_addr) << endl;
+ 		sendto(sock, buf, 256, 0, (struct sockaddr *)&client, sizeof(client));
+ 	}
+	file.close();
  	close(sock);
  	return 0;
  }
