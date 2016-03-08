@@ -11,6 +11,7 @@
  #include <iostream>
  #include <string.h>
  #include <fstream>
+ #include <sys/time.h>
  // For now we will stay with std namespace
  using namespace std;
 
@@ -25,13 +26,19 @@
 	string fileName = argv[2]; // The file name
 	// Declare storages for our server and client addresses
 	struct sockaddr_in server;
-	struct sockaddr_in client; 
+	struct sockaddr_in client;
+	static struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 20000;
+	static int max_timeout = 5;
+	fd_set select_fds; 
+	int rv;
 
 	if((s = initSocket()) < 0) {
  		cout << "Error creating socket. Quiting." << endl;
 		return 0;
 	}
-
+	
 	// Set up the client.
  	memset((char *)&client, 0, sizeof(client)); // Delegate space in memory
  	client.sin_family = AF_INET; // Internet family
@@ -51,6 +58,9 @@
  	} else {
  		cout << "Socket successfully bound to client." << endl;
  	}
+
+	FD_ZERO(&select_fds);
+	FD_SET(s, &select_fds); 
 
  	cout << endl << "============================" << endl << "+      CLIENT RUNNING      +" << endl << "============================" << endl;
 
@@ -95,7 +105,7 @@ bool sendNAK(int s, struct sockaddr * server, int serverSize) {
 	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
-bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
+bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize, int rv, fd_set select_fds, struct timeval timeout) {
 	cout << "Waiting for file from the server." << endl;
 	ofstream output;
 	fileName = "OUTPUT-" + fileName;
@@ -103,17 +113,32 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	int ret = 0;
 	output.open(fileName.c_str());
 	for(;;) {
+		rv = select(s + 1, &select_fds, NULL, NULL, &timeout); 		
+
+
 		byte packet[PACKETSIZE];
-		ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
-		cout << "Receiving packet!" << endl;
-		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
 
-		cout << "size is " << ret << endl;
-		// VALIDATE PACKET
+		if(rv == -1)
+		{
+			perror("select");
+		}
 
-		// OUTPUT CONTENT TO FILE
-		output << packet;
-		
+		else if(rv == 0)
+		{
+			cout << "Timeout occurred! No data after 20 ms" << endl;
+		}
+		else
+		{
+			ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
+			cout << "Receiving packet!" << endl;
+			if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
+
+			cout << "size is " << ret << endl;
+			// VALIDATE PACKET
+
+			// OUTPUT CONTENT TO FILE
+			output << packet;
+		}
 	}
 	output.close();
 	cout << "Received final packet" << endl;
