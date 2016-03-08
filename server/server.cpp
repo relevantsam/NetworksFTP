@@ -26,8 +26,10 @@
  	int sock, n;
  	struct sockaddr_in server;
  	struct sockaddr_in client;
+ 	socklen_t client_len = sizeof(client);
+
  	byte buf[240];
-	fstream file;
+	ifstream file;
 
  	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
  		cout << "Socket creation failed." << endl;
@@ -56,7 +58,7 @@
  	cout << "============================" << endl << "+      SERVER RUNNING      +" << endl << "============================" << endl;
  	string fileName;
  	for(;;) {
- 		n = recvfrom(sock, buf, sizeof(buf), 0, (struct sockaddr *)&client, (socklen_t *)sizeof(client));
+ 		n = recvfrom(sock, buf, sizeof(buf), 0, (struct sockaddr *)&client, &client_len);
  		buf[n] = '\0';
  		char * msg = strtok((char *)buf, " ");
 		string word = msg;
@@ -71,7 +73,7 @@
 		}
  	}
 
- 	file.open(fileName.c_str(), fstream::in | fstream::binary);
+ 	file.open(fileName.c_str(), ios::in);
  	if(!file.is_open()) {
  		cout << "File failed to open." << fileName << endl;
  		return 0;
@@ -80,11 +82,13 @@
  	}
  	while(!file.eof()) {
  		cout << "Reading line: "<< endl;
-		file.read((char *)buf, 240);
-		cout << buf << endl;
-		cout << "Sending to " << inet_ntoa(client.sin_addr) << endl;
- 		sendto(sock, buf, 256, 0, (struct sockaddr *)&client, sizeof(client));
+		file.read((char *)buf, sizeof(buf) - 1);
+ 		buf[n] = '\0';
+ 		printf("%.40s\n", buf);
+ 		sendto(sock, buf, 256, 0, (struct sockaddr *)&client, sizeof(client)); // Send the buffer
+ 		for(int i = 0; i < sizeof(buf); i++) buf[i] = '\0'; // Empty the buffer. 
  	}
+ 	sendto(sock, "\0", 1, 0, (struct sockaddr *)&client, sizeof(client));
 	file.close();
  	close(sock);
  	return 0;

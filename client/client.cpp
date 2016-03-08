@@ -98,7 +98,7 @@ bool sendNAK(int s, struct sockaddr * server, int serverSize) {
 bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
 	cout << "Waiting for file from the server." << endl;
 	ofstream output;
-	fileName += ".txt";
+	fileName = "OUTPUT-" + fileName;
 	output.open(fileName.c_str());
 	for(;;) {
 		byte packet[PACKETSIZE];
@@ -109,7 +109,7 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 		// VALIDATE PACKET
 
 		// OUTPUT CONTENT TO FILE
-		output << "DATA GOES IN HERE" << endl;
+		output << packet;
 	}
 	output.close();
 	cout << "Received final packet" << endl;
