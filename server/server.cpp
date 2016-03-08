@@ -22,7 +22,7 @@
  using namespace std;
 
  int main(int argc, char *argv[]) {
- 	int sd, n;
+ 	int sock, n;
  	struct sockaddr_in server;
  	char buf[512];
 
@@ -32,16 +32,34 @@
  	// Assigns port number to port number specified in head file 
  	server.sin_port = htons(10072); // htons takes short int from host to network byte order
 
- 	sd = socket(AF_INET, SOCK_DGRAM, 0);
- 	// Associate socket with local machine
- 	bind(sd, (struct sockaddr *)&server, sizeof(server));
+ 	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+ 		cout << "Socket creation failed." << endl;
+ 		return 0;
+ 	} else {
+ 		cout << "Socket created! Socket " << socket << endl;
+ 	}
+
+ 	// Set up the server.
+ 	memset((char *)&server, 0, sizeof(server));
+ 	server.sin_family = AF_INET;
+ 	server.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	server.sin_port = htons(SERVER_PORT_NUM);
+
+
+ 	// Associate socket with server
+ 	if(bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
+ 		cout << "Socket failed to bind to server." << endl;
+ 		return 0;
+ 	} else {
+ 		cout << "Socket bound to server." << endl << endl;
+ 	}
  	//cout << "SERVER RUNNING" << endl;
  	for(;;) {
- 		n = recv (sd, buf, sizeof(buf), 0);
+ 		n = recv(sock, buf, sizeof(buf), 0);
  		buf[n] = '\0';
- 		cout << buf;
+ 		cout << buf << endl;
  	}
- 	close(sd);
+ 	close(sock);
  	return 0;
  }
 

@@ -1,32 +1,3 @@
-/*
- * FTP CLIENT
- * 
- * Functionality: 
- *
- * Sends FTP request to server at IP with ports 10070, 10071, 10072, 10073
- *
- * Implement GET request only (GET TestFile)
- *
- * Receives packets (256-byte packets)
- * 
- * Process packet in error detection function
- *
- * -- Check Checksum 
- * ---- Sum all bytes in packet and compare to checksum in header
- * ---- if correct, return ACK and sequence 
- * ---- if incorrect, return NAK and sequence 
- * ------- print that packet has errors and sequence number
- *
- * Print each packet and ACK/NAK and data
- *
- * Process packet in re-assembly function 
- *
- * Close file when receive 1-byte file with null character
- *
- * Send FTP response message with header GET successfully completed
- * 
- *  
- */
 
  // INCLUDE SOCKET REQUIREMENTS
  #include <sys/types.h> // Basic sys data types
@@ -43,103 +14,51 @@
  // For now we will stay with std namespace
  using namespace std;
 
- // Main running function to receive commandline arguments
- int main(int argc, char *argv[]) {
- 	//if(argc == NUM_ARGS - 1) { // check for expected number of inputs
- 		// Change to readable names
- 		//char * serverName = argv[1];
- 		//char * fileName = argv[2];
- 		cout << "===================================\n      Welcome to B(arlett)TP\n===================================" << endl;
- 		//int socketID = initSocket();
- 		//sockaddr_in server = getServerAddr(serverName);
- 		//int get = sendGETRequest(socketID, server, fileName);
- 		//closeSocket(socketID);
+ int main() {
+ 	struct sockaddr_in client;
+ 	struct sockaddr_in server;
+ 	int sock = 0;
+ 	string ip = string("131.204.14.183/24"); // TUX 175
+ 	int port = CLIENT_PORT_NUM;
 
- 		int sd;
- 		struct sockaddr_in server;
- 		struct hostent *hp;
+ 	// Let's make a socket..
+ 	if((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+ 		cout << "Error creating socket. Quiting." << endl;
+ 		return 1;
+ 	} else {
+ 		cout << "Socket " << sock << " created!" << endl;
+ 	}
 
- 		string ip = string("131.204.14.175/24");
- 		int port = CLIENT_PORT_NUM;
+ 	// Set up the client.
+ 	memset((char *)&client, 0, sizeof(client)); // removable? 
+ 	client.sin_family = AF_INET;
+ 	client.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	client.sin_port = htons(port);
 
-		//sd = socket(AF_INET, SOCK_DGRAM, 0);
-		if((sd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) { // Let's try the IPPROTO_UDP thing
-			cout << "Socket failure." << endl;
-			return 1;
-		}
+ 	// And now let's bind our client to our socket
+ 	if(bind(sock, (struct sockaddr *)&client, sizeof(client)) < 0){
+ 		cout << "Error binding socket to client. Quiting." << endl;
+ 		return 1;
+ 	} else {
+ 		cout << "Socket successfully bound to client." << endl;
+ 	}
 
- 		server.sin_family = AF_INET;
- 		server.sin_port = htons(10073);
- 		//hp = gethostbyname(argv[1]);
- 		hp = gethostbyname(ip.c_str());
+ 	// Set up the server.
+ 	memset((char *)&server, 0, sizeof(server));
+ 	server.sin_family = AF_INET;
+ 	server.sin_port = htons(10073);
+ 	if(inet_pton(AF_INET, ip.c_str(), &(server.sin_addr))) {
+ 		cout << "SUCCESS" << endl;
+ 	} else {
+ 		cout << "Failed to bind IP to server" << endl;
+ 	}
 
- 		memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
-	 	for(;;) {
-		 	sendto(sd, "HI", 2, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
+ 	cout << "Bound IP address " << inet_ntoa(server.sin_addr) << " to the server" << endl << endl;
+
+ 	for(;;) {
+		 	cout << "Sending Message to " << inet_ntoa(server.sin_addr) << endl;
+		 	sendto(sock, "MESSAGE GOES HERE", 50, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
 		 	sleep(2);
 		}
-		close(sd);
- 		//cout << 1 << endl;
- 	//} else {
- 		// Output usage
- 	//	cout << "ERROR: Expected usage for BTP is with " << NUM_ARGS << " arguments: <Program Name> <Server IP> <Requested File Name>" << endl;
- 	//}
- 	return 0;
- }
 
- int initSocket() {
- 	/*
- 	 * Declare variables
- 	 */
- 	// sd is an int representing socket or -1 if socket failed
- 	int sd;
- 	// Structure modeling the client machine
- 	struct sockaddr_in client;
-
- 	/* 
- 	 * Fill client socket
- 	 */
- 	// AF_INET is internet protocol
- 	client.sin_family = AF_INET;
- 	// Assigns address to IP address of machine
- 	client.sin_addr.s_addr = htonl(INADDR_ANY); // htonl takes long int from host to network byte order
- 	// Assigns port number to port number specified in head file 
- 	client.sin_port = htons(CLIENT_PORT_NUM); // htons takes short int from host to network byte order
- 	// AF_INET is internet protocol, SOCK_DGRAM is UDP, 0 selects protocol
- 	sd = socket(AF_INET, SOCK_DGRAM, 0);
- 	// Associate socket with local machine
- 	bind(sd, (struct sockaddr *)&client, sizeof(client));
- 	return sd;
  }
-
- sockaddr_in getServerAddr(char* serverName) {
- 	// Represents host
- 	struct hostent *hp;
- 	// Structure modeling server
- 	struct sockaddr_in server;
- 	// Obtain server address
- 	hp = gethostbyname(serverName);
- 	// copy address from hp into server struct
- 	memcpy(hp->h_addr,&(server.sin_addr), hp->h_length);
- 	server.sin_family = AF_INET; // Set family to internet protocol
- 	server.sin_port = htons(SERVER_PORT_NUM); // htons short int from host -> network byte order
- 	return server;
- }
- 
- void closeSocket(int sd) {
- 	close(sd); // Need to close at other end as well
- }
-
- // Function to send get request to server program. 
- int sendGETRequest(int sd, sockaddr_in to, char* fileName) {
- 	cout << "BTP Sending GET request for file " << fileName << endl;
- 	char *buffer = "Sample message";
- 	// Send a message! How exciting
- 	for(;;) {
-	 	int sending = sendto(sd, "hi!", 2, 0, (struct sockaddr *)&to, sizeof(to)); // 0 is flags
-	 	cout << "Sending hi" << endl;
-	 	sleep(2);
-	 }
- 	return 1;
- }
- 
