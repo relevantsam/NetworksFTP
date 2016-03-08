@@ -99,17 +99,21 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	cout << "Waiting for file from the server." << endl;
 	ofstream output;
 	fileName = "OUTPUT-" + fileName;
+	//temp variable to check packet length
+	int ret = 0;
 	output.open(fileName.c_str());
 	for(;;) {
 		byte packet[PACKETSIZE];
-		recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
+		ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
 		cout << "Receiving packet!" << endl;
 		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
 
+		cout << "size is " << ret << endl;
 		// VALIDATE PACKET
 
 		// OUTPUT CONTENT TO FILE
 		output << packet;
+		
 	}
 	output.close();
 	cout << "Received final packet" << endl;
