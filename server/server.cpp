@@ -78,7 +78,7 @@
  		cout << "File failed to open." << fileName << endl;
  		return 0;
  	} else {
- 		cout << "File opened" << endl;
+ 		cout << "Opened " << fileName << endl;
  	}
  	while(!file.eof()) {
  		cout << "Reading line: "<< endl;
@@ -87,6 +87,7 @@
  		printf("%.40s\n", buf);
  		sendto(sock, buf, 256, 0, (struct sockaddr *)&client, sizeof(client)); // Send the buffer
  		for(int i = 0; i < sizeof(buf); i++) buf[i] = '\0'; // Empty the buffer. 
+ 		cout << endl << "=======================" << endl << endl;
  	}
  	sendto(sock, "\0", 1, 0, (struct sockaddr *)&client, sizeof(client));
 	file.close();
