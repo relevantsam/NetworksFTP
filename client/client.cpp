@@ -27,12 +27,6 @@
 	// Declare storages for our server and client addresses
 	struct sockaddr_in server;
 	struct sockaddr_in client;
-	static struct timeval timeout;
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 20000;
-	static int max_timeout = 5;
-	fd_set select_fds; 
-	int rv;
 
 	if((s = initSocket()) < 0) {
  		cout << "Error creating socket. Quiting." << endl;
@@ -57,10 +51,7 @@
  		return 1;
  	} else {
  		cout << "Socket successfully bound to client." << endl;
- 	}
-
-	FD_ZERO(&select_fds);
-	FD_SET(s, &select_fds); 
+ 	} 
 
  	cout << endl << "============================" << endl << "+      CLIENT RUNNING      +" << endl << "============================" << endl;
 
@@ -105,12 +96,23 @@ bool sendNAK(int s, struct sockaddr * server, int serverSize) {
 	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
-bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize, int rv, fd_set select_fds, struct timeval timeout) {
+bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
 	cout << "Waiting for file from the server." << endl;
 	ofstream output;
 	fileName = "OUTPUT-" + fileName;
 	//temp variable to check packet length
 	int ret = 0;
+	
+	static struct timeval timeout;
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 20000;
+        static int max_timeout = 5;
+        fd_set select_fds;
+        int rv;
+
+	FD_ZERO(&select_fds);
+	FD_SET(s, &select_fds);
+
 	output.open(fileName.c_str());
 	for(;;) {
 		rv = select(s + 1, &select_fds, NULL, NULL, &timeout); 		
