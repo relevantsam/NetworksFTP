@@ -18,7 +18,7 @@
  	struct sockaddr_in client;
  	struct sockaddr_in server;
  	int sock = 0;
- 	string ip = string("131.204.14.183/24"); // TUX 175
+ 	string ip = string("131.204.14.183"); // TUX183
  	int port = CLIENT_PORT_NUM;
 
  	// Let's make a socket..
@@ -47,18 +47,15 @@
  	memset((char *)&server, 0, sizeof(server));
  	server.sin_family = AF_INET;
  	server.sin_port = htons(10073);
- 	if(inet_pton(AF_INET, ip.c_str(), &(server.sin_addr))) {
- 		cout << "SUCCESS" << endl;
- 	} else {
- 		cout << "Failed to bind IP to server" << endl;
- 	}
+ 	inet_pton(AF_INET, ip.c_str(), &(server.sin_addr));
 
  	cout << "Bound IP address " << inet_ntoa(server.sin_addr) << " to the server" << endl << endl;
-
+ 	int i = 1;
  	for(;;) {
-		 	cout << "Sending Message to " << inet_ntoa(server.sin_addr) << endl;
+		 	cout << "Sending Message " << i << " to " << inet_ntoa(server.sin_addr) << endl;
 		 	sendto(sock, "MESSAGE GOES HERE", 50, 0, (struct sockaddr *)&server, sizeof(server)); // 0 is flags
 		 	sleep(2);
+		 	i++;
 		}
 
  }

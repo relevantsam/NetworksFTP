@@ -54,10 +54,12 @@
  		cout << "Socket bound to server." << endl << endl;
  	}
  	//cout << "SERVER RUNNING" << endl;
+ 	int i = 1;
  	for(;;) {
  		n = recv(sock, buf, sizeof(buf), 0);
  		buf[n] = '\0';
- 		cout << buf << endl;
+ 		cout << "Message " << i << ": " << buf << endl;
+ 		i++;
  	}
  	close(sock);
  	return 0;
