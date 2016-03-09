@@ -43,5 +43,7 @@
  packet byteDataToPacket(byte data[PACKETSIZE]);
 
  int reassembly(struct packet);
+ 
+ int checksumCal(byte packet[]);
 
  #endif 
