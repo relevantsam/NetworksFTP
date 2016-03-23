@@ -32,30 +32,32 @@
  	byte buf[BUFFSIZE];
 	ifstream file;
 
- 	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+	sock = initSocket();
+	if(sock < 0) return 0;
+
+ 	/*if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
  		cout << "Socket creation failed." << endl;
  		return 0;
  	} else {
  		cout << "Socket created! Socket " << socket << endl;
- 	}
+ 	}*/
 
  	// Set up the server.
- 	memset((char *)&server, 0, sizeof(server));
+ 	/*memset((char *)&server, 0, sizeof(server));
  	server.sin_family = AF_INET;
  	server.sin_addr.s_addr = htonl(INADDR_ANY);
  	server.sin_port = htons(SERVER_PORT);
 
- 	cout << "Server allocated" << endl;
+ 	cout << "Server allocated" << endl;*/
 
 
  	// Associate socket with server
- 	if(bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
+ 	/*if(bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
  		cout << "Socket failed to bind to server." << endl;
  		return 0;
  	} else {
  		cout << "Socket bound to server." << endl << endl;
- 	}
- 	
+ 	}*/
  	cout << "============================" << endl << "+      SERVER RUNNING      +" << endl << "============================" << endl;
  	string fileName;
  	for(;;) {
@@ -102,6 +104,8 @@
 
 		sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
 
+ 		// Wait for ACK, NAK
+
  		for(int i = 0; i < BUFFSIZE; i++) message.data[i] = '\0'; // Empty the buffer. 
  		seq = !seq;
  	}
@@ -111,6 +115,9 @@
  	return 0;
  }
 
+ /*
+  * Initialize the socket and bind it to the server
+  */
  int initSocket() {
  	/*
  	 * Declare variables
@@ -120,9 +127,20 @@
  	// Structure modeling the client machine
  	struct sockaddr_in server;
 
+ 	// Create the socket
+	if((sd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+	 		cout << "Socket creation failed." << endl;
+	 		return -1;
+ 	} else {
+ 		cout << "Socket created! Socket " << socket << endl;
+ 	}
+
+
+
  	/* 
  	 * Fill server socket
  	 */
+ 	memset((char *)&server, 0, sizeof(server));
  	// AF_INET is internet protocol
  	server.sin_family = AF_INET;
  	// Assigns address to IP address of machine
@@ -130,9 +148,13 @@
  	// Assigns port number to port number specified in head file 
  	server.sin_port = htons(SERVER_PORT); // htons takes short int from host to network byte order
  	// AF_INET is internet protocol, SOCK_DGRAM is UDP, 0 selects protocol
- 	sd = socket(AF_INET, SOCK_DGRAM, 0);
  	// Associate socket with local machine
- 	bind(sd, (struct sockaddr *)&server, sizeof(server));
+ 	if(bind(sd, (struct sockaddr *)&server, sizeof(server)) < 0) {
+ 		cout << "Socket failed to bind to server." << endl;
+ 		return -1;
+ 	} else {
+ 		cout << "Socket bound to server." << endl << endl;
+ 	}
  	return sd;
  }
 

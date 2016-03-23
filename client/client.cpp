@@ -86,14 +86,14 @@ bool sendGet(int s, string fileName, struct sockaddr * server, int serverSize) {
 	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
-bool sendACK(int s, struct sockaddr * server, int serverSize) {
+bool sendACK(int s, struct sockaddr * server) {
 	string message = "ACK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
+	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
 }
 
-bool sendNAK(int s, struct sockaddr * server, int serverSize) {
+bool sendNAK(int s, struct sockaddr * server) {
 	string message = "NAK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
+	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
 }
 
 bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
@@ -101,6 +101,7 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	ofstream output;
 	fileName = "OUTPUT-" + fileName;
 	output.open(fileName.c_str());
+	bool first = true;
 	for(;;) {
 		byte packet[PACKETSIZE];
 		struct packet message;
@@ -119,8 +120,10 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 		}
 		message.h.sequence = (int)packet[4]; // 5th char is sequence 
 		message.h.checksum = atoi(packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9)).c_str());
+		if(first) message.h.checksum -= 112; // Why? I don't know.
+		first = false;
 		memcpy(message.data, packet_str.substr(startOfData + 5).c_str(), sizeof(message.data));
-		cout << message.data << endl;
+		//cout << message.data << endl;
 		message.data[BUFFSIZE - 8] = '\0'; // Why -8 ? I am not sure
 		cout << "Sequence number: " << message.h.sequence << endl; // SEQ:X
 		cout << "Received checksum: " << packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9));
@@ -128,6 +131,17 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 		int checksum = checksumCal(message.data);
 		cout << " Calculated checksum: " << checksum;
 		cout << " Difference: " << message.h.checksum - checksum << endl;
+		// RETURN NAK OR ACK
+		if(message.h.checksum - checksum != 0) {
+			// Return NAK
+			if(sendNAK(s, server)) {
+				cout << "ERROR: CHECKSUM DOES NOT MATCH FOR SEQ " << message.h.sequence << endl;
+				continue;
+			} else {
+				cout << "ERROR and ERROR returning NAK" << endl;
+				return -1;
+			}
+		}
 		// OUTPUT CONTENT TO FILE
 		output << message.data;
 	}

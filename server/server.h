@@ -25,7 +25,7 @@
 
  int initSocket();
 
- void runServer();
+ int runServer(int socket);
 
  int checksumCal(byte packet[]);
 
