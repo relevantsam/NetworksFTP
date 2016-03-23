@@ -31,8 +31,8 @@
 
 // Send message section
  bool sendGet(int s, std::string fileName, struct sockaddr * server, int serverSize);
- bool sendACK(int s, struct sockaddr * server, int serverSize);
- bool sendNAK(int s, struct sockaddr * server, int serverSize);
+ bool sendACK(int s, struct sockaddr * server);
+ bool sendNAK(int s, struct sockaddr * server);
 
  bool getFile(std::string fileName, int s, struct sockaddr * server, socklen_t * serverSize);
 
@@ -43,5 +43,7 @@
  packet byteDataToPacket(byte data[PACKETSIZE]);
 
  int reassembly(struct packet);
+ 
+ int checksumCal(byte packet[]);
 
  #endif 

@@ -11,7 +11,10 @@
  #include <iostream>
  #include <string.h>
  #include <fstream>
- #include <sys/time.h>
+<<<<<<< HEAD
+=======
+ #include <stdlib.h> 
+>>>>>>> ed47a0fa793f2dc8203e7f4867242e25c8a9be6e
  // For now we will stay with std namespace
  using namespace std;
 
@@ -86,14 +89,14 @@ bool sendGet(int s, string fileName, struct sockaddr * server, int serverSize) {
 	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
-bool sendACK(int s, struct sockaddr * server, int serverSize) {
+bool sendACK(int s, struct sockaddr * server) {
 	string message = "ACK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
+	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
 }
 
-bool sendNAK(int s, struct sockaddr * server, int serverSize) {
+bool sendNAK(int s, struct sockaddr * server) {
 	string message = "NAK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
+	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
 }
 
 bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
@@ -114,7 +117,9 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	FD_SET(s, &select_fds);
 
 	output.open(fileName.c_str());
+	bool first = true;
 	for(;;) {
+<<<<<<< HEAD
 		rv = select(s + 1, &select_fds, NULL, NULL, &timeout); 		
 
 
@@ -141,6 +146,49 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 			// OUTPUT CONTENT TO FILE
 			output << packet;
 		}
+=======
+		byte packet[PACKETSIZE];
+		struct packet message;
+		recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
+		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
+		string packet_str = (char *)packet;
+		int startOfData = packet_str.find("DATA:");
+		if(!startOfData) {
+			cout << "Cannot find DATA in packet." << endl;
+			return 0;
+		}
+		int startOfChecksum = packet_str.find("CHECKSUM:");
+		if(!startOfChecksum) {
+			cout << "Cannot find CHECKSUM in packet." << endl;
+			return 0;
+		}
+		message.h.sequence = (int)packet[4]; // 5th char is sequence 
+		message.h.checksum = atoi(packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9)).c_str());
+		if(first) message.h.checksum -= 112; // Why? I don't know.
+		first = false;
+		memcpy(message.data, packet_str.substr(startOfData + 5).c_str(), sizeof(message.data));
+		//cout << message.data << endl;
+		message.data[BUFFSIZE - 8] = '\0'; // Why -8 ? I am not sure
+		cout << "Sequence number: " << message.h.sequence << endl; // SEQ:X
+		cout << "Received checksum: " << packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9));
+		// VALIDATE PACKET
+		int checksum = checksumCal(message.data);
+		cout << " Calculated checksum: " << checksum;
+		cout << " Difference: " << message.h.checksum - checksum << endl;
+		// RETURN NAK OR ACK
+		if(message.h.checksum - checksum != 0) {
+			// Return NAK
+			if(sendNAK(s, server)) {
+				cout << "ERROR: CHECKSUM DOES NOT MATCH FOR SEQ " << message.h.sequence << endl;
+				continue;
+			} else {
+				cout << "ERROR and ERROR returning NAK" << endl;
+				return -1;
+			}
+		}
+		// OUTPUT CONTENT TO FILE
+		output << message.data;
+>>>>>>> ed47a0fa793f2dc8203e7f4867242e25c8a9be6e
 	}
 	output.close();
 	cout << "Received final packet" << endl;
@@ -151,5 +199,15 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 int closeSocket(int s) {
 	close(s); // Don't forget to close the other end!
 	return 1;
+}
+
+// Function to calculate checksum of packet
+int checksumCal(byte packet[]) {
+	int checksum = 0;
+	for(int i = 0; i < BUFFSIZE; i++) {
+		if(packet[i] == '\0') break;
+		checksum += (int) packet[i];
+	}
+	return checksum;
 }
 
