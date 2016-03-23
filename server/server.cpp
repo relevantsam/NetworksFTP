@@ -20,17 +20,26 @@
  #include <cstring>
  #include <fstream>
  #include <sstream>
+ #include <sys/time.h>
  // For now we will stay with std namespace
  using namespace std;
 
  int main(int argc, char *argv[]) {
- 	int sock, n;
+ 	int sock, n, p;
  	struct sockaddr_in server;
  	struct sockaddr_in client;
  	socklen_t client_len = sizeof(client);
 
  	byte buf[BUFFSIZE];
 	ifstream file;
+
+	struct timeval stTimeOut;
+
+	fd_set stReadFDS;
+
+	//set timeout for 20ms
+	stTimeOut.tv_sec = 0;
+	stTimeOut.tv_usec = 20000;
 
 	sock = initSocket();
 	if(sock < 0) return 0;
@@ -58,6 +67,9 @@
  	} else {
  		cout << "Socket bound to server." << endl << endl;
  	}*/
+
+	FD_SET(sock, &stReadFDS);
+
  	cout << "============================" << endl << "+      SERVER RUNNING      +" << endl << "============================" << endl;
  	string fileName;
  	for(;;) {
@@ -104,7 +116,33 @@
 
 		sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
 
- 		// Wait for ACK, NAK
+ 		// Wait for ACK/NACK
+		int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
+		if(FD_ISSET(sock, &stReadFDS))
+		{
+			p = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
+			buf[p] = '\0';
+			char * ACKmsg = strtok((char *)buf, " ");
+			string ACKword = ACKmsg;
+			if(ACKword == "ACK")
+			{
+				cout << "sequence " << message.h.sequence << " ACK\n";
+			}
+
+			else if(ACKword == "NACK")
+			{
+				cout << "sequence " << message.h.sequence << " NACK\n";
+				cout << "resending...\n";
+				sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
+			}
+
+		}
+		else if(t == 0)
+		{
+			cout << "sequence " << message.h.sequence << " timeout\n";
+			cout << "resending...\n";
+			sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
+		}
 
  		for(int i = 0; i < BUFFSIZE; i++) message.data[i] = '\0'; // Empty the buffer. 
  		seq = !seq;
