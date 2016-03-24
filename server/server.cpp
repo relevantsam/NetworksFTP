@@ -26,7 +26,7 @@
  using namespace std;
 
  int main(int argc, char *argv[]) {
-	if(argc != 2)
+	if(argc != 3)
 	{
 		cout << "Usage Error. Expected usage: <Program Name> <Probability of Packet Damage> (represented as an integer) <Probability of Packet Loss> (also as an integer" << endl;
 		return 0;
