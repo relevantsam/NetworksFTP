@@ -21,6 +21,7 @@
  #include <fstream>
  #include <sstream>
  #include <sys/time.h>
+ #include <cstdlib>
  // For now we will stay with std namespace
  using namespace std;
 
