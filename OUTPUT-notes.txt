@@ -1,0 +1,42 @@
+Sockets are connections from program to program - we will need to use sockets.
+
+Our client and server will have distinct addresses. 
+
+EX:
+	Client: 187.2.123.421:10070
+	Server: 123.1.342.342:10073
+
+The connection socket pair would be:
+	(187.2.123.421:10070, 123.1.342.342:10073)
+
+32-bit IP addresses are stored in an IP address struct in <netinet/in.h>
+
+****** Internet address structure sample ******
+struct in_addr {
+	unsigned int s_addr; /* network byte order (big-endian) */	
+};
+
+****** Important functions *******
+htonl: long int from host to network byte order 
+htons: short int from host to network byte order
+ntohl: long int from network to host byte order
+ntohs: short int from network to host byte order
+
+Little endian vs Big endian
+Big: "big end first" - msb at front (4A3B = 4A is MSB) (used by networks)
+little: opposite (used by processors)
+
+TUX machine ips: 31.204.14.### Where ### = machine #
+
+includes:
+
+#include <sys/socket.h> 
+#include <netinet/in.h> 
+#include <arpa/inet.h>
+
+inet_addr() converts an IP address in numbers-and-dots notation into unsigned long unsigned long inet_addr(char *ptr);
+e.g. ina.sin_addr.s_addr = inet_addr(“129.110.43.11”) // Network byte order
+inet_aton()   also converts ascii to network address
+int inet_aton(const char *cp, struct in_addr *inp);
+inet_ntoa() returns a string from a struct of type in_addr char *inet_ntoa(struct in_addr inaddr) ;
+

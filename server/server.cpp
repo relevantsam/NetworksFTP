@@ -26,9 +26,10 @@
  using namespace std;
 
  int main(int argc, char *argv[]) {
+	srand(time(NULL)); 
 	if(argc != 3)
 	{
-		cout << "Usage Error. Expected usage: <Program Name> <Probability of Packet Damage> (represented as an integer) <Probability of Packet Loss> (also as an integer" << endl;
+		cout << "Usage Error. Expected usage: <Program Name> <Probability of Packet Damage> (represented as an integer) <Probability of Packet Loss> (also as an integer)" << endl;
 		return 0;
 	}
 
@@ -43,42 +44,11 @@
  	byte buf[BUFFSIZE];
 	ifstream file;
 
-	struct timeval stTimeOut;
-
 	fd_set stReadFDS;
-
-	//set timeout for 20ms
-	stTimeOut.tv_sec = 0;
-	stTimeOut.tv_usec = 20000;
 
 	sock = initSocket();
 	if(sock < 0) return 0;
-
- 	/*if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
- 		cout << "Socket creation failed." << endl;
- 		return 0;
- 	} else {
- 		cout << "Socket created! Socket " << socket << endl;
- 	}*/
-
- 	// Set up the server.
- 	/*memset((char *)&server, 0, sizeof(server));
- 	server.sin_family = AF_INET;
- 	server.sin_addr.s_addr = htonl(INADDR_ANY);
- 	server.sin_port = htons(SERVER_PORT);
-
- 	cout << "Server allocated" << endl;*/
-
-
- 	// Associate socket with server
- 	/*if(bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
- 		cout << "Socket failed to bind to server." << endl;
- 		return 0;
- 	} else {
- 		cout << "Socket bound to server." << endl << endl;
- 	}*/
-
-	FD_SET(sock, &stReadFDS);
+	int nForSock = sock + 1;
 
  	cout << "============================" << endl << "+      SERVER RUNNING      +" << endl << "============================" << endl;
  	string fileName;
@@ -118,40 +88,54 @@
 			<< endl << "*        SEQUENCE " 
 			<< message.h.sequence << "        *" 
 			<< endl << "============================" << endl;
- 		printf("Packet Message:  %.40s...\n", message.data);
+		printf("Packet Message:  %.40s...\n", message.data);
 
-		cout << "Packet Checksum: " << message.h.checksum << endl;
+		//cout << "Packet Checksum: " << message.h.checksum << endl;
 
-		cout << message.data << endl;
+		//cout << message.data << endl;
 
 		sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
-
+ 		//set timeout for 20ms
+top:
+	struct timeval stTimeOut;
+		stTimeOut.tv_sec = 0;
+		stTimeOut.tv_usec = 20000;
+		FD_CLR(sock, &stReadFDS);
+	FD_ZERO(&stReadFDS);
+	FD_SET(sock, &stReadFDS);
  		// Wait for ACK/NACK
-		int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
-		if(FD_ISSET(sock, &stReadFDS))
+		int t = select(nForSock, &stReadFDS, NULL, NULL, &stTimeOut); // Select checks for timeouts
+		//if(FD_ISSET(sock, &stReadFDS))
+		if(t == -1) {
+		 cout << "SELECT ERROR" << endl; 
+		 return 0;
+		} if(t == 0)
 		{
-			p = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
-			buf[p] = '\0';
-			char * ACKmsg = strtok((char *)buf, " ");
-			string ACKword = ACKmsg;
-			if(ACKword == "ACK")
-			{
-				cout << "sequence " << message.h.sequence << " ACK\n";
-			}
-
-			else if(ACKword == "NACK")
-			{
-				cout << "sequence " << message.h.sequence << " NACK\n";
-				cout << "resending...\n";
-				sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
-			}
-
-		}
-		else if(t == 0)
-		{
-			cout << "sequence " << message.h.sequence << " timeout\n";
+			cout << "sequence " << message.h.sequence << " lost\n";
 			cout << "resending...\n";
 			sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
+			goto top;
+		}
+		else
+		{
+			if(FD_ISSET(sock, &stReadFDS)){
+				p = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
+				buf[p] = '\0';
+				char * ACKmsg = strtok((char *)buf, " ");
+				string ACKword = ACKmsg;
+				if(ACKword == "ACK")
+				{
+					cout << "sequence " << message.h.sequence << " ACK" << endl << endl;
+				}
+
+				else if(ACKword == "NAK")
+				{
+					cout << "sequence " << message.h.sequence << " NAK - corrupted\n";
+					cout << "resending...\n";
+					sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
+					goto top;
+				}
+			}
 		}
 
  		for(int i = 0; i < BUFFSIZE; i++) message.data[i] = '\0'; // Empty the buffer. 
@@ -231,11 +215,11 @@ void sendPacket(packet message, int socket, struct sockaddr * client, int size, 
 	strcat(message_str, "CHECKSUM:");
 	strcat(message_str, checksum);
 	strcat(message_str, "DATA:");
-	strcat(message_str, (char *)message.data);
-	message_str[PACKETSIZE] = '\0';
 
 	if(gremlin(message, pD, pL))
 	{
+		strcat(message_str, (char *)message.data);
+		message_str[PACKETSIZE] = '\0';
 		sendto(socket, message_str, PACKETSIZE+1, 0, client, size); // Send the packet
 	}
 }
@@ -246,12 +230,11 @@ void sendPacket(packet message, int socket, struct sockaddr * client, int size, 
 
 bool gremlin(packet &message, int pD, int pL)
 {
-	srand(time(NULL));
 	int chance = rand() % 100;
-
-	if(chance < pL)
+	if(chance < pL) // If your random number is in range 0-X, drop it. Otherwise do not.
 	{
-		return false;
+		//cout << "DROPPING" << endl;
+		return false; 
 	}
 
 	chance = rand() % 100;
@@ -260,29 +243,38 @@ bool gremlin(packet &message, int pD, int pL)
 		chance = rand() % 100;
 		if(chance < 70)
 		{
+			//cout << "MODIFYING 1 BIT" << endl;
 			//modify 1 bit
 			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
+			if(message.data[chance] != '!') message.data[chance] = '!';
+			else message.data[chance] = '?';
 		}
 
 		else if(chance >= 70 && chance < 90)
 		{
+			//cout << "MODIFYING 2 BIT" << endl;
 			//modify 2 bits
 			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
+			if(message.data[chance] != '!') message.data[chance] = '!';
+			else message.data[chance] = '?';
 			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
+			if(message.data[chance] != '!') message.data[chance] = '!';
+			else message.data[chance] = '?';
 		}
 
 		else if(chance >=90 && chance < 100)
 		{
+			//cout << "MODIFYING 3 BIT" << endl;
 			//modify 3 bits
 			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
+			if(message.data[chance] != '!') message.data[chance] = '!';
+			else message.data[chance] = '?';
 			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
+			if(message.data[chance] != '!') message.data[chance] = '!';
+			else message.data[chance] = '?';
 			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
+			if(message.data[chance] != '!') message.data[chance] = '!';
+			else message.data[chance] = '?';
 		}
 
 		return true;

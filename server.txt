@@ -1,0 +1,2032 @@
+Script started on Thu 24 Mar 2016 01:01:59 AM CDT
+[?1034hbash-4.1$ ./server 10 15[1@A[1@p[1@p[C[C[C[C[C[C
+Socket created! Socket 1
+Socket bound to server.
+
+============================
++      SERVER RUNNING      +
+============================
+GET REQUEST RECEIVED
+Request for testFile.txt
+Opened testFile.txt
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  One morning, when Gregor Samsa woke from...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  d and divided by arches into stiff secti...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ked. "What's happened to me?" he thought...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  msa was a travelling salesman - and abov...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ising a heavy fur muff that covered the ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ut if I sleep a little bit longer and fo...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  hard he threw himself onto his right, he...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  d, dull pain there that he had never fel...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   home, and on top of that there's the cu...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  hem. It can all go to Hell!" He felt a s...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   little white spots which he didn't know...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  mer position. "Getting up early all the ...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   to copy out the contract, these gentlem...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   didn't have my parents to think about I...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  k! And it's a funny sort of business to ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ope; once I've got the money together to...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   leaves at five." And he looked over at ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ter to seven. Had the alarm clock not ru...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ng noise? True, he had not slept peacefu...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  s was still not packed, and he did not a...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   he would have put in his report about G...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   suspicious as in fifteen years of servi...
+sequence 1 lost
+resending...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  recommendation not to make any claim as ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ter sleeping for so long, feel completel...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ke back, and if he lifted his head a lit...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ifully thin compared with the size of th...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  s four familiar walls. A collection of t...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ilded frame. It showed a lady fitted out...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   Drops of rain could be heard hitting th...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  eeping on his right, and in his present ...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  dn't have to look at the floundering leg...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ay out. Doing business like this takes m...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   people all the time so that you can nev...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ift his head better; found where the itc...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  e as soon as he touched it he was overco...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   life of luxury. For instance, whenever ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   kicked out on the spot. But who knows, ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  tell him everything I would, let him kno...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ve to go right up close because the boss...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  That's when I'll make the big change. Fi...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  he hands were quietly moving forwards, i...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  must have rung. Yes, but was it possible...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  n; if he were to catch that he would hav...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  s anger as the office assistant would ha...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  understanding. What about if he reported...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  al insurance company, accuse his parents...
+sequence 1 lost
+resending...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  een entirely wrong in this case? Gregor ...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  he found himself transformed in his bed ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  as hardly able to cover it and seemed re...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  m. His room, a proper human room althoug...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  picture that he had recently cut out of ...
+sequence 0 lost
+resending...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   arm towards the viewer. Gregor then tur...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ense", he thought, but that was somethin...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  k to where he was. He must have tried it...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ", he thought, "what a strenuous career ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   worries about making train connections,...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  is belly; pushed himself slowly up on hi...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  and when he tried to feel the place with...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   "it makes you stupid. You've got to get...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  l sitting there eating their breakfasts....
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  y notice a long time ago, I'd have gone ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  e at your desk, talking down at your sub...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  s' debt to him - another five or six yea...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  icking on the chest of drawers. "God in ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  rom the bed that it had been set for fou...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  all the more deeply because of that. Wha...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  larly fresh and lively. And even if he d...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  there a long time ago. The office assist...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  r once yet been ill. His boss would cert...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  d that no-one was ever ill but that many...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  lt much hungrier than usual. One morning...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  is brown belly, slightly domed and divid...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ed about helplessly as he looked. "What'...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   spread out on the table - Samsa was a t...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  d fur boa who sat upright, raising a hea...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   him feel quite sad. "How about if I sle...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   into that position. However hard he thr...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  d when he began to feel a mild, dull pai...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  an doing your own business at home, and ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  one or become friendly with them. It can...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  t it was covered with lots of little whi...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  er. He slid back into his former positio...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  uest house during the morning to copy ou...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  e the best thing for me. If I didn't hav...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  . He'd fall right off his desk! And it's...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  g. Well, there's still some hope; once I...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   I've got to get up, my train leaves at ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  han half past, more like quarter to seve...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  through that furniture-rattling noise? T...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   and the collection of samples was still...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ee the five o'clock train go, he would h...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  uld be extremely strained and suspicious...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  son, and accept the doctor's recommendat...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   from excessive sleepiness after sleepin...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  rmin. He lay on his armour-like back, an...
+sequence 0 lost
+resending...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ny moment. His many legs, pitifully thin...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ll, lay peacefully between its four fami...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  azine and housed in a nice, gilded frame...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  e window at the dull weather. Drops of r...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   do because he was used to sleeping on h...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  shut his eyes so that he wouldn't have t...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  osen! Travelling day in and day out. Doi...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   food, contact with different people all...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   headboard so that he could lift his hea...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  e drew it quickly back because as soon a...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  er travelling salesmen live a life of lu...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ry that with my boss; I'd get kicked out...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   told him just what I think, tell him ev...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  there, especially when you have to go ri...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  t's definitely what I'll do. That's when...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  t. It was half past six and the hands we...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ould have been; it certainly must have r...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ? The next train went at seven; if he we...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   he would not avoid his boss's anger as ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   man, spineless, and with no understandi...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ith the doctor from the medical insuranc...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   what's more, would he have been entirel...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  a woke from troubled dreams, he found hi...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  stiff sections. The bedding was hardly a...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   he thought. It wasn't a dream. His room...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   - and above it there hung a picture tha...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  overed the whole of her lower arm toward...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  nger and forget all this nonsense", he t...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  s right, he always rolled back to where ...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  d never felt before. "Oh, God", he thoug...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  re's the curse of travelling, worries ab...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  He felt a slight itch up on his belly; p...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  didn't know what to make of; and when he...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ly all the time", he thought, "it makes ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ese gentlemen are always still sitting t...
+sequence 1 lost
+resending...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ink about I'd have given in my notice a ...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  usiness to be sitting up there at your d...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  together to pay off my parents' debt to ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ed over at the alarm clock, ticking on t...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  lock not rung? He could see from the bed...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ept peacefully, but probably all the mor...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 lost
+resending...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  e did not at all feel particularly fresh...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ort about Gregor's not being there a lon...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  rs of service Gregor had never once yet ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  y claim as the doctor believed that no-o...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  l completely well and even felt much hun...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   head a little he could see his brown be...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   size of the rest of him, waved about he...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ection of textile samples lay spread out...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   fitted out with a fur hat and fur boa w...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   hitting the pane, which made him feel q...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  is present state couldn't get into that ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ndering legs, and only stopped when he b...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  his takes much more effort than doing yo...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  you can never get to know anyone or beco...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ere the itch was, and saw that it was co...
+sequence 0 lost
+resending...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   was overcome by a cold shudder. He slid...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  , whenever I go back to the guest house ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  who knows, maybe that would be the best ...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  let him know just what I feel. He'd fall...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  se the boss is hard of hearing. Well, th...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   change. First of all though, I've got t...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  forwards, it was even later than half pa...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  it possible to quietly sleep through tha...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  e would have to rush like mad and the co...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  nt would have been there to see the five...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  he reported sick? But that would be extr...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  his parents of having a lazy son, and ac...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  se? Gregor did in fact, apart from exces...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  in his bed into a horrible vermin. He la...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  d seemed ready to slide off any moment. ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  oom although a little too small, lay pea...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  cut out of an illustrated magazine and h...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  or then turned to look out the window at...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  as something he was unable to do because...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ve tried it a hundred times, shut his ey...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ous career it is that I've chosen! Trave...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  onnections, bad and irregular food, cont...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ly up on his back towards the headboard ...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   place with one of his legs he drew it q...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   got to get enough sleep. Other travelli...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  breakfasts. I ought to just try that wit...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   have gone up to the boss and told him j...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  at your subordinates from up there, espe...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   or six years I suppose - that's definit...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  s. "God in Heaven!" he thought. It was h...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  set for four o'clock as it should have b...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  f that. What should he do now? The next ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ven if he did catch the train he would n...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  fice assistant was the boss's man, spine...
+sequence 0 lost
+resending...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   would certainly come round with the doc...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  t that many were workshy. And what's mor...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  One morning, when Gregor Samsa woke from...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  d and divided by arches into stiff secti...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ked. "What's happened to me?" he thought...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  msa was a travelling salesman - and abov...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ising a heavy fur muff that covered the ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ut if I sleep a little bit longer and fo...
+sequence 0 lost
+resending...
+sequence 0 lost
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  hard he threw himself onto his right, he...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  d, dull pain there that he had never fel...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   home, and on top of that there's the cu...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  hem. It can all go to Hell!" He felt a s...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   little white spots which he didn't know...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  mer position. "Getting up early all the ...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   to copy out the contract, these gentlem...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   didn't have my parents to think about I...
+sequence 0 lost
+resending...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  k! And it's a funny sort of business to ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ope; once I've got the money together to...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   leaves at five." And he looked over at ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ter to seven. Had the alarm clock not ru...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ng noise? True, he had not slept peacefu...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  s was still not packed, and he did not a...
+sequence 0 NAK - corrupted
+resending...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   he would have put in his report about G...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:   suspicious as in fifteen years of servi...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  recommendation not to make any claim as ...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ter sleeping for so long, feel completel...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  ke back, and if he lifted his head a lit...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 lost
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ifully thin compared with the size of th...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:  s four familiar walls. A collection of t...
+sequence 1 NAK - corrupted
+resending...
+sequence 1 ACK
+
+
+============================
+*        SEQUENCE 0        *
+============================
+Packet Message:  ilded frame. It showed a lady fitted out...
+sequence 0 ACK
+
+
+============================
+*        SEQUENCE 1        *
+============================
+Packet Message:   Drops of rain could be heard hitting th...
+sequence 1 ACK
+
+bash-4.1$ more testFile.txt
+One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his
+ armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sec
+tions. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with th
+e size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a pro
+per human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread 
+out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated m
+agazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur
+ muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops 
+of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all this n
+onsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state
+ couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was. He must have tri
+ed it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a
+ mild, dull pain there that he had never felt before. "Oh, God", he thought, "what a strenuous career it is that I've chosen! Travellin
+g day in and day out. Doing business like this takes much more effort than doing your own business at home, and on top of that there's 
+the curse of travelling, worries about making train connections, bad and irregular food, contact with different people all the time so 
+that you can never get to know anyone or become friendly with them. It can all go to Hell!" He felt a slight itch up on his belly; push
+ed himself slowly up on his back towards the headboard so that he could lift his head better; found where the itch was, and saw that it
+ was covered with lots of little white spots which he didn't know what to make of; and when he tried to feel the place with one of his 
+legs he drew it quickly back because as soon as he touched it he was overcome by a cold shudder. He slid back into his former position.
+ "Getting up early all the time", he thought, "it makes you stupid. You've got to get enough sleep. Other travelling salesmen live a li
+fe of luxury. For instance, whenever I go back to the guest house during the morning to copy out the contract, these gentlemen are alwa
+ys still sitting there eating their breakfasts. I ought to just try that with my boss; I'd get kicked out on the spot. But who knows, m
+aybe that would be the best thing for me. If I didn't have my parents to think about I'd have given in my notice a long time ago, I'd h
+ave gone up to the boss and told him just what I think, tell him everything I would, let him know just what I feel. He'd fall right off
+ his desk! And it's a funny sort of business to be sitting up there at your desk, talking down at your subordinates from up there, espe
+cially when you have to go right up close because the boss is hard of hearing. Well, there's still some hope; once I've got the money t
+ogether to pay off my parents' debt to him - another five or six years I suppose - that's definitely what I'll do. That's when I'll mak
+e the big change. First of all though, I've got to get up, my train leaves at five." And he looked over at the alarm clock, ticking on 
+the chest of drawers. "God in Heaven!" he thought. It was half past six and the hands were quietly moving forwards, it was even later t
+han half past, more like quarter to seven. Had the alarm clock not rung? He could see from the bed that it had been set for four o'cloc
+k as it should have been; it certainly must have rung. Yes, but was it possible to quietly sleep through that furniture-rattling noise?
+ True, he had not slept peacefully, but probably all the more deeply because of that. What should he do now? The next train went at sev
+en; if he were to catch that he would have to rush like mad and the collection of samples was still not packed, and he did not at all f
+eel particularly fresh and lively. And even if he did catch the train he would not avoid his boss's anger as the office assistant would
+ have been there to see the five o'clock train go, he would have put in his report about Gregor's not being there a long time ago. The 
+office assistant was the boss's man, spineless, and with no understanding. What about if he reported sick? But that would be extremely 
+strained and suspicious as in fifteen years of service Gregor had never once yet been ill. His boss would certainly come round with the
+ doctor from the medical insurance company, accuse his parents of having a lazy son, and accept the doctor's recommendation not to make
+ any claim as the doctor believed that no-one was ever ill but that many were workshy. And what's more, would he have been entirely wro
+ng in this case? Gregor did in fact, apart from excessive sleepiness after sleeping for so long, feel completely well and even felt muc
+h hungrier than usual. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horribl
+[7m--More--(11%)[27me vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided b
+[7m--More--(11%)[27my arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifull
+[7m--More--(11%)[27my thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a
+[7m--More--(11%)[27m dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of text
+[7m--More--(12%)[27mile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut 
+[7m--More--(12%)[27mout of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat uprig
+[7m--More--(12%)[27mht, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at t
+[7m--More--(12%)[27mhe dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longe
+[7m--More--(13%)[27mr and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, a
+[7m--More--(13%)[27mnd in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where h
+[7m--More--(13%)[27me was. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped 
+[7m--More--(14%)[27mwhen he began to feel a mild, dull pain there that he had never felt before. "Oh, God", he thought, "what a strenuous career it is that
+[7m--More--(14%)[27m I've chosen! Travelling day in and day out. Doing business like this takes much more effort than doing your own business at home, and 
+[7m--More--(14%)[27mon top of that there's the curse of travelling, worries about making train connections, bad and irregular food, contact with different 
+[7m--More--(14%)[27mpeople all the time so that you can never get to know anyone or become friendly with them. It can all go to Hell!" He felt a slight itc
+[7m--More--(15%)[27mh up on his belly; pushed himself slowly up on his back towards the headboard so that he could lift his head better; found where the it
+[7m--More--(15%)[27mch was, and saw that it was covered with lots of little white spots which he didn't know what to make of; and when he tried to feel the
+[7m--More--(15%)[27m place with one of his legs he drew it quickly back because as soon as he touched it he was overcome by a cold shudder. He slid back in
+[7m--More--(15%)[27mto his former position. "Getting up early all the time", he thought, "it makes you stupid. You've got to get enough sleep. Other travel
+[7m--More--(16%)[27mling salesmen live a life of luxury. For instance, whenever I go back to the guest house during the morning to copy out the contract, t
+[7m--More--(16%)[27mhese gentlemen are always still sitting there eating their breakfasts. I ought to just try that with my boss; I'd get kicked out on the
+[7m--More--(16%)[27m spot. But who knows, maybe that would be the best thing for me. If I didn't have my parents to think about I'd have given in my notice
+[7m--More--(17%)[27m a long time ago, I'd have gone up to the boss and told him just what I think, tell him everything I would, let him know just what I fe
+[7m--More--(17%)[27mel. He'd fall right off his desk! And it's a funny sort of business to be sitting up there at your desk, talking down at your subordina
+[7m--More--(17%)[27mtes from up there, especially when you have to go right up close because the boss is hard of hearing. Well, there's still some hope; on
+[7m--More--(17%)[27mce I've got the money together to pay off my parents' debt to him - another five or six years I suppose - that's definitely what I'll d
+[7m--More--(18%)[27mo. That's when I'll make the big change. First of all though, I've got to get up, my train leaves at five." And he looked over at the a
+[7m--More--(18%)[27mlarm clock, ticking on the chest of drawers. "God in Heaven!" he thought. It was half past six and the hands were quietly moving forwar
+[7m--More--(18%)[27mds, it was even later than half past, more like quarter to seven. Had the alarm clock not rung? He could see from the bed that it had b
+[7m--More--(18%)[27meen set for four o'clock as it should have been; it certainly must have rung. Yes, but was it possible to quietly sleep through that fu
+[7m--More--(19%)[27mrniture-rattling noise? True, he had not slept peacefully, but probably all the more deeply because of that. What should he do now? The
+[7m--More--(19%)[27m next train went at seven; if he were to catch that he would have to rush like mad and the collection of samples was still not packed, 
+[7m--More--(19%)[27mand he did not at all feel particularly fresh and lively. And even if he did catch the train he would not avoid his boss's anger as the
+[7m--More--(19%)[27m office assistant would have been there to see the five o'clock train go, he would have put in his report about Gregor's not being ther
+[7m--More--(20%)[27me a long time ago. The office assistant was the boss's man, spineless, and with no understanding. What about if he reported sick? But t
+[7m--More--(20%)[27mhat would be extremely strained and suspicious as in fifteen years of service Gregor had never once yet been ill. His boss would certai
+[7m--More--(20%)[27mnly come round with the doctor from the medical insurance company, accuse his parents of having a lazy son, and accept the doctor's rec
+[7m--More--(21%)[27mommendation not to make any claim as the doctor believed that no-one was ever ill but that many were workshy. And what's more, would he
+[7m--More--(21%)[27m have been entirely wrong in this case? Gregor did in fact, apart from excessive sleepiness after sleeping for so long, feel completely
+[7m--More--(21%)[27m well and even felt much hungrier than usual. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in
+[7m--More--(21%)[27m his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, sligh
+[7m--More--(22%)[27mtly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. 
+[7m--More--(22%)[27mHis many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" 
+[7m--More--(22%)[27mhe thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar wall
+[7m--More--(22%)[27ms. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture th
+[7m--More--(23%)[27mat he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat an
+[7m--More--(23%)[27md fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to l
+[7m--More--(23%)[27mook out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I s
+[7m--More--(24%)[27mleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used to s
+[7m--More--(24%)[27mleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always
+[7m--More--(24%)[27m rolled back to where he was. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering 
+[7m--More--(24%)[27mlegs, and only stopped when he began to feel a mild, dull pain there that he had never felt before. "Oh, God", he thought, "what a stre
+[7m--More--(25%)[27mnuous career it is that I've chosen! Travelling day in and day out. Doing business like this takes much more effort than doing your own
+[7m--More--(25%)[27m business at home, and on top of that there's the curse of travelling, worries about making train connections, bad and irregular food, 
+[7m--More--(25%)[27mcontact with different people all the time so that you can never get to know anyone or become friendly with them. It can all go to Hell
+[7m--More--(25%)[27m!" He felt a slight itch up on his belly; pushed himself slowly up on his back towards the headboard so that he could lift his head bet
+[7m--More--(26%)[27mter; found where the itch was, and saw that it was covered with lots of little white spots which he didn't know what to make of; and wh
+[7m--More--(26%)[27men he tried to feel the place with one of his legs he drew it quickly back because as soon as he touched it he was overcome by a cold s
+[7m--More--(26%)[27mhudder. He slid back into his former position. "Getting up early all the time", he thought, "it makes you stupid. You've got to get eno
+[7m--More--(27%)[27mugh sleep. Other travelling salesmen live a life of luxury. For instance, whenever I go back to the guest house during the morning to c
+[7m--More--(27%)[27mopy out the contract, these gentlemen are always still sitting there eating their breakfasts. I ought to just try that with my boss; I'
+[7m--More--(27%)[27md get kicked out on the spot. But who knows, maybe that would be the best thing for me. If I didn't have my parents to think about I'd 
+[7m--More--(27%)[27mhave given in my notice a long time ago, I'd have gone up to the boss and told him just what I think, tell him everything I would, let 
+[7m--More--(28%)[27mhim know just what I feel. He'd fall right off his desk! And it's a funny sort of business to be sitting up there at your desk, talking
+[7m--More--(28%)[27m down at your subordinates from up there, especially when you have to go right up close because the boss is hard of hearing. Well, ther
+[7m--More--(28%)[27me's still some hope; once I've got the money together to pay off my parents' debt to him - another five or six years I suppose - that's
+[7m--More--(28%)[27m definitely what I'll do. That's when I'll make the big change. First of all though, I've got to get up, my train leaves at five." And 
+[7m--More--(29%)[27mhe looked over at the alarm clock, ticking on the chest of drawers. "God in Heaven!" he thought. It was half past six and the hands wer
+[7m--More--(29%)[27me quietly moving forwards, it was even later than half past, more like quarter to seven. Had the alarm clock not rung? He could see fro
+[7m--More--(29%)[27mm the bed that it had been set for four o'clock as it should have been; it certainly must have rung. Yes, but was it possible to quietl
+[7m--More--(29%)[27my sleep through that furniture-rattling noise? True, he had not slept peacefully, but probably all the more deeply because of that. Wha
+[7m--More--(30%)[27mt should he do now? The next train went at seven; if he were to catch that he would have to rush like mad and the collection of samples
+[7m--More--(30%)[27m was still not packed, and he did not at all feel particularly fresh and lively. And even if he did catch the train he would not avoid 
+[7m--More--(30%)[27mhis boss's anger as the office assistant would have been there to see the five o'clock train go, he would have put in his report about 
+[7m--More--(31%)[27mGregor's not being there a long time ago. The office assistant was the boss's man, spineless, and with no understanding. What about if 
+[7m--More--(31%)[27mhe reported sick? But that would be extremely strained and suspicious as in fifteen years of service Gregor had never once yet been ill
+[7m--More--(31%)[27m. His boss would certainly come round with the doctor from the medical insurance company, accuse his parents of having a lazy son, and 
+[7m--More--(31%)[27maccept the doctor's recommendation not to make any claim as the doctor believed that no-one was ever ill but that many were workshy. An
+[7m--More--(32%)[27md what's more, would he have been entirely wrong in this case? Gregor did in fact, apart from excessive sleepiness after sleeping for s
+[7m--More--(32%)[27mo long, feel completely well and even felt much hungrier than usual. One morning, when Gregor Samsa woke from troubled dreams, he found
+[7m--More--(32%)[27m himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see
+[7m--More--(32%)[27m his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to
+[7m--More--(33%)[27m slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "W
+[7m--More--(33%)[27mhat's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between
+[7m--More--(33%)[27m its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it 
+[7m--More--(34%)[27mthere hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitte
+[7m--More--(34%)[27md out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. 
+[7m--More--(34%)[27mGregor then turned to look out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite
+[7m--More--(34%)[27m sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do b
+[7m--More--(35%)[27mecause he was used to sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself on
+[7m--More--(35%)[27mto his right, he always rolled back to where he was. He must have tried it a hundred times, shut his eyes so that he wouldn't have to l
+[7m--More--(35%)[27mook at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before. "Oh, God", h
+[7m--More--(35%)[27me thought, "what a strenuous career it is that I've chosen! Travelling day in and day out. Doing business like this takes much more eff
+[7m--More--(36%)[27mort than doing your own business at home, and on top of that there's the curse of travelling, worries about making train connections, b
+[7m--More--(36%)[27mad and irregular food, contact with different people all the time so that you can never get to know anyone or become friendly with them
+[7m--More--(36%)[27m. It can all go to Hell!" He felt a slight itch up on his belly; pushed himself slowly up on his back towards the headboard so that he 
+[7m--More--(36%)[27mcould lift his head better; found where the itch was, and saw that it was covered with lots of little white spots which he didn't know 
+[7m--More--(37%)[27mwhat to make of; and when he tried to feel the place with one of his legs he drew it quickly back because as soon as he touched it he w
+[7m--More--(37%)[27mas overcome by a cold shudder. He slid back into his former position. "Getting up early all the time", he thought, "it makes you stupid
+[7m--More--(37%)[27m. You've got to get enough sleep. Other travelling salesmen live a life of luxury. For instance, whenever I go back to the guest house 
+[7m--More--(38%)[27mduring the morning to copy out the contract, these gentlemen are always still sitting there eating their breakfasts. I ought to just tr
+[7m--More--(38%)[27my that with my boss; I'd get kicked out on the spot. But who knows, maybe that would be the best thing for me. If I didn't have my pare
+[7m--More--(38%)[27mnts to think about I'd have given in my notice a long time ago, I'd have gone up to the boss and told him just what I think, tell him e
+[7m--More--(38%)[27mverything I would, let him know just what I feel. He'd fall right off his desk! And it's a funny sort of business to be sitting up ther
+[7m--More--(39%)[27me at your desk, talking down at your subordinates from up there, especially when you have to go right up close because the boss is hard
+[7m--More--(39%)[27m of hearing. Well, there's still some hope; once I've got the money together to pay off my parents' debt to him - another five or six y
+[7m--More--(39%)[27mears I suppose - that's definitely what I'll do. That's when I'll make the big change. First of all though, I've got to get up, my trai
+[7m--More--(39%)[27mn leaves at five." And he looked over at the alarm clock, ticking on the chest of drawers. "God in Heaven!" he thought. It was half pas
+[7m--More--(40%)[27mt six and the hands were quietly moving forwards, it was even later than half past, more like quarter to seven. Had the alarm clock not
+[7m--More--(40%)[27m rung? He could see from the bed that it had been set for four o'clock as it should have been; it certainly must have rung. Yes, but wa
+[7m--More--(40%)[27ms it possible to quietly sleep through that furniture-rattling noise? True, he had not slept peacefully, but probably all the more deep
+[7m--More--(41%)[27mly because of that. What should he do now? The next train went at seven; if he were to catch that he would have to rush like mad and th
+[7m--More--(41%)[27me collection of samples was still not packed, and he did not at all feel particularly fresh and lively. And even if he did catch the tr
+[7m--More--(41%)[27main he would not avoid his boss's anger as the office assistant would have been there to see the five o'clock train go, he would have p
+[7m--More--(41%)[27mut in his report about Gregor's not being there a long time ago. The office assistant was the boss's man, spineless, and with no unders
+[7m--More--(42%)[27mtanding. What about if he reported sick? But that would be extremely strained and suspicious as in fifteen years of service Gregor had 
+[7m--More--(42%)[27mnever once yet been ill. His boss would certainly come round with the doctor from the medical insurance company, accuse his parents of 
+[7m--More--(42%)[27mhaving a lazy son, and accept the doctor's recommendation not to make any claim as the doctor believed that no-one was ever ill but tha
+[7m--More--(42%)[27mt many were workshy. And what's more, would he have been entirely wrong in this case? Gregor did in fact, apart from excessive sleepine
+[7m--More--(43%)[27mss after sleeping for so long, feel completely well and even felt much hungrier than usual. One morning, when Gregor Samsa woke from tr
+[7m--More--(43%)[27moubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his hea
+[7m--More--(43%)[27md a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover
+[7m--More--(44%)[27m it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about help
+[7m--More--(44%)[27mlessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small,
+[7m--More--(44%)[27m lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling s
+[7m--More--(44%)[27malesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.
+[7m--More--(45%)[27m It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower a
+[7m--More--(45%)[27mrm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops of rain could be heard hitting the pane, wh
+[7m--More--(45%)[27mich made him feel quite sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought, but that was somethin
+[7m--More--(45%)[27mg he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position. However h
+[7m--More--(46%)[27mard he threw himself onto his right, he always rolled back to where he was. He must have tried it a hundred times, shut his eyes so tha
+[7m--More--(46%)[27mt he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never fe
+[7m--More--(46%)[27mlt before. "Oh, God", he thought, "what a strenuous career it is that I've chosen! Travelling day in and day out. Doing business like t
+[7m--More--(46%)[27mhis takes much more effort than doing your own business at home, and on top of that there's the curse of travelling, worries about maki
+[7m--More--(47%)[27mng train connections, bad and irregular food, contact with different people all the time so that you can never get to know anyone or be
+[7m--More--(47%)[27mcome friendly with them. It can all go to Hell!" He felt a slight itch up on his belly; pushed himself slowly up on his back towards th
+[7m--More--(47%)[27me headboard so that he could lift his head better; found where the itch was, and saw that it was covered with lots of little white spot
+[7m--More--(48%)[27ms which he didn't know what to make of; and when he tried to feel the place with one of his legs he drew it quickly back because as soo
+[7m--More--(48%)[27mn as he touched it he was overcome by a cold shudder. He slid back into his former position. "Getting up early all the time", he though
+[7m--More--(48%)[27mt, "it makes you stupid. You've got to get enough sleep. Other travelling salesmen live a life of luxury. For instance, whenever I go b
+[7m--More--(48%)[27mack to the guest house during the morning to copy out the contract, these gentlemen are always still sitting there eating their breakfa
+[7m--More--(49%)[27msts. I ought to just try that with my boss; I'd get kicked out on the spot. But who knows, maybe that would be the best thing for me. I
+[7m--More--(49%)[27mf I didn't have my parents to think about I'd have given in my notice a long time ago, I'd have gone up to the boss and told him just w
+[7m--More--(49%)[27mhat I think, tell him everything I would, let him know just what I feel. He'd fall right off his desk! And it's a funny sort of busines
+[7m--More--(49%)[27ms to be sitting up there at your desk, talking down at your subordinates from up there, especially when you have to go right up close b
+[7m--More--(50%)[27mecause the boss is hard of hearing. Well, there's still some hope; once I've got the money together to pay off my parents' debt to him 
+[7m--More--(50%)[27m- another five or six years I suppose - that's definitely what I'll do. That's when I'll make the big change. First of all though, I've
+[7m--More--(50%)[27m got to get up, my train leaves at five." And he looked over at the alarm clock, ticking on the chest of drawers. "God in Heaven!" he t
+[7m--More--(51%)[27mhought. It was half past six and the hands were quietly moving forwards, it was even later than half past, more like quarter to seven. 
+[7m--More--(51%)[27mHad the alarm clock not rung? He could see from the bed that it had been set for four o'clock as it should have been; it certainly must
+[7m--More--(51%)[27m have rung. Yes, but was it possible to quietly sleep through that furniture-rattling noise? True, he had not slept peacefully, but pro
+[7m--More--(51%)[27mbably all the more deeply because of that. What should he do now? The next train went at seven; if he were to catch that he would have 
+[7m--More--(52%)[27mto rush like mad and the collection of samples was still not packed, and he did not at all feel particularly fresh and lively. And even
+[7m--More--(52%)[27m if he did catch the train he would not avoid his boss's anger as the office assistant would have been there to see the five o'clock tr
+[7m--More--(52%)[27main go, he would have put in his report about Gregor's not being there a long time ago. The office assistant was the boss's man, spinel
+[7m--More--(52%)[27mess, and with no understanding. What about if he reported sick? But that would be extremely strained and suspicious as in fifteen years
+[7m--More--(53%)[27m of service Gregor had never once yet been ill. His boss would certainly come round with the doctor from the medical insurance company,
+[7m--More--(53%)[27m accuse his parents of having a lazy son, and accept the doctor's recommendation not to make any claim as the doctor believed that no-o
+[7m--More--(53%)[27mne was ever ill but that many were workshy. And what's more, would he have been entirely wrong in this case? Gregor did in fact, apart 
+[7m--More--(54%)[27mfrom excessive sleepiness after sleeping for so long, feel completely well and even felt much hungrier than usual. One morning, when Gr
+[7m--More--(54%)[27megor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, a
+[7m--More--(54%)[27mnd if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding w
+[7m--More--(54%)[27mas hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest o
+[7m--More--(55%)[27mf him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room altho
+[7m--More--(55%)[27mugh a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - S
+[7m--More--(55%)[27mamsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed i
+[7m--More--(55%)[27mn a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered t
+[7m--More--(56%)[27mhe whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops of rain could be hea
+[7m--More--(56%)[27mrd hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all this nonsense", he thought
+[7m--More--(56%)[27m, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into t
+[7m--More--(56%)[27mhat position. However hard he threw himself onto his right, he always rolled back to where he was. He must have tried it a hundred time
+[7m--More--(57%)[27ms, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain the
+[7m--More--(57%)[27mre that he had never felt before. "Oh, God", he thought, "what a strenuous career it is that I've chosen! Travelling day in and day out
+[7m--More--(57%)[27m. Doing business like this takes much more effort than doing your own business at home, and on top of that there's the curse of travell
+[7m--More--(58%)[27ming, worries about making train connections, bad and irregular food, contact with different people all the time so that you can never g
+[7m--More--(58%)[27met to know anyone or become friendly with them. It can all go to Hell!" He felt a slight itch up on his belly; pushed himself slowly up
+[7m--More--(58%)[27m on his back towards the headboard so that he could lift his head better; found where the itch was, and saw that it was covered with lo
+[7m--More--(58%)[27mts of little white spots which he didn't know what to make of; and when he tried to feel the place with one of his legs he drew it quic
+[7m--More--(59%)[27mkly back because as soon as he touched it he was overcome by a cold shudder. He slid back into his former position. "Getting up early a
+[7m--More--(59%)[27mll the time", he thought, "it makes you stupid. You've got to get enough sleep. Other travelling salesmen live a life of luxury. For in
+[7m--More--(59%)[27mstance, whenever I go back to the guest house during the morning to copy out the contract, these gentlemen are always still sitting the
+[7m--More--(59%)[27mre eating their breakfasts. I ought to just try that with my boss; I'd get kicked out on the spot. But who knows, maybe that would be t
+[7m--More--(60%)[27mhe best thing for me. If I didn't have my parents to think about I'd have given in my notice a long time ago, I'd have gone up to the b
+[7m--More--(60%)[27moss and told him just what I think, tell him everything I would, let him know just what I feel. He'd fall right off his desk! And it's 
+[7m--More--(60%)[27ma funny sort of business to be sitting up there at your desk, talking down at your subordinates from up there, especially when you have
+[7m--More--(61%)[27m to go right up close because the boss is hard of hearing. Well, there's still some hope; once I've got the money together to pay off m
+[7m--More--(61%)[27my parents' debt to him - another five or six years I suppose - that's definitely what I'll do. That's when I'll make the big change. Fi
+[7m--More--(61%)[27mrst of all though, I've got to get up, my train leaves at five." And he looked over at the alarm clock, ticking on the chest of drawers
+[7m--More--(61%)[27m. "God in Heaven!" he thought. It was half past six and the hands were quietly moving forwards, it was even later than half past, more 
+[7m--More--(62%)[27mlike quarter to seven. Had the alarm clock not rung? He could see from the bed that it had been set for four o'clock as it should have 
+[7m--More--(62%)[27mbeen; it certainly must have rung. Yes, but was it possible to quietly sleep through that furniture-rattling noise? True, he had not sl
+[7m--More--(62%)[27mept peacefully, but probably all the more deeply because of that. What should he do now? The next train went at seven; if he were to ca
+[7m--More--(62%)[27mtch that he would have to rush like mad and the collection of samples was still not packed, and he did not at all feel particularly fre
+[7m--More--(63%)[27msh and lively. And even if he did catch the train he would not avoid his boss's anger as the office assistant would have been there to 
+[7m--More--(63%)[27msee the five o'clock train go, he would have put in his report about Gregor's not being there a long time ago. The office assistant was
+[7m--More--(63%)[27m the boss's man, spineless, and with no understanding. What about if he reported sick? But that would be extremely strained and suspici
+[7m--More--(63%)[27mous as in fifteen years of service Gregor had never once yet been ill. His boss would certainly come round with the doctor from the med
+[7m--More--(64%)[27mical insurance company, accuse his parents of having a lazy son, and accept the doctor's recommendation not to make any claim as the do
+[7m--More--(64%)[27mctor believed that no-one was ever ill but that many were workshy. And what's more, would he have been entirely wrong in this case? Gre
+[7m--More--(64%)[27mgor did in fact, apart from excessive sleepiness after sleeping for so long, feel completely well and even felt much hungrier than usua
+[7m--More--(65%)[27ml. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on 
+[7m--More--(65%)[27mhis armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff 
+[7m--More--(65%)[27msections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with
+[7m--More--(65%)[27m the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a 
+[7m--More--(66%)[27mproper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spre
+[7m--More--(66%)[27mad out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrate
+[7m--More--(66%)[27md magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy 
+[7m--More--(66%)[27mfur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Dro
+[7m--More--(67%)[27mps of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit longer and forget all thi
+[7m--More--(67%)[27ms nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present st
+[7m--More--(67%)[27mate couldn't get into that position. However hard he threw himself onto his right, he always rolled back to where he was. He must have 
+[7m--More--(68%)[27mtried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to fee
+[7m--More--(68%)[27ml a mild, dull pain there that he had never felt before. "Oh, God", he thought, "what a strenuous career it is that I've chosen! Travel
+[7m--More--(68%)[27mling day in and day out. Doing business like this takes much more effort than doing your own business at home, and on top of that there
+[7m--More--(68%)[27m's the curse of travelling, worries about making train connections, bad and irregular food, contact with different people all the time 
+[7m--More--(69%)[27mso that you can never get to know anyone or become friendly with them. It can all go to Hell!" He felt a slight itch up on his belly; p
+[7m--More--(69%)[27mushed himself slowly up on his back towards the headboard so that he could lift his head better; found where the itch was, and saw that
+[7m--More--(69%)[27m it was covered with lots of little white spots which he didn't know what to make of; and when he tried to feel the place with one of h
+[7m--More--(69%)[27mis legs he drew it quickly back because as soon as he touched it he was overcome by a cold shudder. He slid back into his former positi
+[7m--More--(70%)[27mon. "Getting up early all the time", he thought, "it makes you stupid. You've got to get enough sleep. Other travelling salesmen live a
+[7m--More--(70%)[27m life of luxury. For instance, whenever I go back to the guest house during the morning to copy out the contract, these gentlemen are a
+[7m--More--(70%)[27mlways still sitting there eating their breakfasts. I ought to just try that with my boss; I'd get kicked out on the spot. But who knows
+[7m--More--(71%)[27m, maybe that would be the best thing for me. If I didn't have my parents to think about I'd have given in my notice a long time ago, I'
+[7m--More--(71%)[27md have gone up to the boss and told him just what I think, tell him everything I would, let him know just what I feel. He'd fall right 
+[7m--More--(71%)[27moff his desk! And it's a funny sort of business to be sitting up there at your desk, talking down at your subordinates from up there, e
+[7m--More--(71%)[27mspecially when you have to go right up close because the boss is hard of hearing. Well, there's still some hope; once I've got the mone
+[7m--More--(72%)[27my together to pay off my parents' debt to him - another five or six years I suppose - that's definitely what I'll do. That's when I'll 
+[7m--More--(72%)[27mmake the big change. First of all though, I've got to get up, my train leaves at five." And he looked over at the alarm clock, ticking 
+[7m--More--(72%)[27mon the chest of drawers. "God in Heaven!" he thought. It was half past six and the hands were quietly moving forwards, it was even late
+[7m--More--(72%)[27mr than half past, more like quarter to seven. Had the alarm clock not rung? He could see from the bed that it had been set for four o'c
+[7m--More--(73%)[27mlock as it should have been; it certainly must have rung. Yes, but was it possible to quietly sleep through that furniture-rattling noi
+[7m--More--(73%)[27mse? True, he had not slept peacefully, but probably all the more deeply because of that. What should he do now? The next train went at 
+[7m--More--(73%)[27mseven; if he were to catch that he would have to rush like mad and the collection of samples was still not packed, and he did not at al
+[7m--More--(73%)[27ml feel particularly fresh and lively. And even if he did catch the train he would not avoid his boss's anger as the office assistant wo
+[7m--More--(74%)[27muld have been there to see the five o'clock train go, he would have put in his report about Gregor's not being there a long time ago. T
+[7m--More--(74%)[27mhe office assistant was the boss's man, spineless, and with no understanding. What about if he reported sick? But that would be extreme
+[7m--More--(74%)[27mly strained and suspicious as in fifteen years of service Gregor had never once yet been ill. His boss would certainly come round with 
+[7m--More--(75%)[27mthe doctor from the medical insurance company, accuse his parents of having a lazy son, and accept the doctor's recommendation not to m
+[7m--More--(75%)[27make any claim as the doctor believed that no-one was ever ill but that many were workshy. And what's more, would he have been entirely 
+[7m--More--(75%)[27mwrong in this case? Gregor did in fact, apart from excessive sleepiness after sleeping for so long, feel completely well and even felt 
+[7m--More--(75%)[27mmuch hungrier than usual. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horr
+[7m--More--(76%)[27mible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divide
+[7m--More--(76%)[27md by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitif
+[7m--More--(76%)[27mully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn'
+[7m--More--(76%)[27mt a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of t
+[7m--More--(77%)[27mextile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently c
+[7m--More--(77%)[27mut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat up
+[7m--More--(77%)[27mright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window a
+[7m--More--(78%)[27mt the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if I sleep a little bit lo
+[7m--More--(78%)[27mnger and forget all this nonsense", he thought, but that was something he was unable to do because he was used to sleeping on his right
+[7m--More--(78%)[27m, and in his present state couldn't get into that position. However hard he threw himself onto his right, he always rolled back to wher
+[7m--More--(78%)[27me he was. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopp
+[7m--More--(79%)[27med when he began to feel a mild, dull pain there that he had never felt before. "Oh, God", he thought, "what a strenuous career it is t
+[7m--More--(79%)[27mhat I've chosen! Travelling day in and day out. Doing business like this takes much more effort than doing your own business at home, a
+[7m--More--(79%)[27mnd on top of that there's the curse of travelling, worries about making train connections, bad and irregular food, contact with differe
+[7m--More--(79%)[27mnt people all the time so that you can never get to know anyone or become friendly with them. It can all go to Hell!" He felt a slight 
+[7m--More--(80%)[27mitch up on his belly; pushed himself slowly up on his back towards the headboard so that he could lift his head better; found where the
+[7m--More--(80%)[27m itch was, and saw that it was covered with lots of little white spots which he didn't know what to make of; and when he tried to feel 
+[7m--More--(80%)[27mthe place with one of his legs he drew it quickly back because as soon as he touched it he was overcome by a cold shudder. He slid back
+[7m--More--(81%)[27m into his former position. "Getting up early all the time", he thought, "it makes you stupid. You've got to get enough sleep. Other tra
+[7m--More--(81%)[27mvelling salesmen live a life of luxury. For instance, whenever I go back to the guest house during the morning to copy out the contract
+[7m--More--(81%)[27m, these gentlemen are always still sitting there eating their breakfasts. I ought to just try that with my boss; I'd get kicked out on 
+[7m--More--(81%)[27mthe spot. But who knows, maybe that would be the best thing for me. If I didn't have my parents to think about I'd have given in my not
+[7m--More--(82%)[27mice a long time ago, I'd have gone up to the boss and told him just what I think, tell him everything I would, let him know just what I
+[7m--More--(82%)[27m feel. He'd fall right off his desk! And it's a funny sort of business to be sitting up there at your desk, talking down at your subord
+[7m--More--(82%)[27minates from up there, especially when you have to go right up close because the boss is hard of hearing. Well, there's still some hope;
+[7m--More--(82%)[27m once I've got the money together to pay off my parents' debt to him - another five or six years I suppose - that's definitely what I'l
+[7m--More--(83%)[27ml do. That's when I'll make the big change. First of all though, I've got to get up, my train leaves at five." And he looked over at th
+[7m--More--(83%)[27me alarm clock, ticking on the chest of drawers. "God in Heaven!" he thought. It was half past six and the hands were quietly moving for
+[7m--More--(83%)[27mwards, it was even later than half past, more like quarter to seven. Had the alarm clock not rung? He could see from the bed that it ha
+[7m--More--(83%)[27md been set for four o'clock as it should have been; it certainly must have rung. Yes, but was it possible to quietly sleep through that
+[7m--More--(84%)[27m furniture-rattling noise? True, he had not slept peacefully, but probably all the more deeply because of that. What should he do now? 
+[7m--More--(84%)[27mThe next train went at seven; if he were to catch that he would have to rush like mad and the collection of samples was still not packe
+[7m--More--(84%)[27md, and he did not at all feel particularly fresh and lively. And even if he did catch the train he would not avoid his boss's anger as 
+[7m--More--(85%)[27mthe office assistant would have been there to see the five o'clock train go, he would have put in his report about Gregor's not being t
+[7m--More--(85%)[27mhere a long time ago. The office assistant was the boss's man, spineless, and with no understanding. What about if he reported sick? Bu
+[7m--More--(85%)[27mt that would be extremely strained and suspicious as in fifteen years of service Gregor had never once yet been ill. His boss would cer
+[7m--More--(85%)[27mtainly come round with the doctor from the medical insurance company, accuse his parents of having a lazy son, and accept the doctor's 
+[7m--More--(86%)[27mrecommendation not to make any claim as the doctor believed that no-one was ever ill but that many were workshy. And what's more, would
+[7m--More--(86%)[27m he have been entirely wrong in this case? Gregor did in fact, apart from excessive sleepiness after sleeping for so long, feel complet
+[7m--More--(86%)[27mely well and even felt much hungrier than usual. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed
+[7m--More--(86%)[27m in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, sl
+[7m--More--(87%)[27mightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any momen
+[7m--More--(87%)[27mt. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me
+[7m--More--(87%)[27m?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar w
+[7m--More--(88%)[27malls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture
+[7m--More--(88%)[27m that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat
+[7m--More--(88%)[27m and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned t
+[7m--More--(88%)[27mo look out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. "How about if 
+[7m--More--(89%)[27mI sleep a little bit longer and forget all this nonsense", he thought, but that was something he was unable to do because he was used t
+[7m--More--(89%)[27mo sleeping on his right, and in his present state couldn't get into that position. However hard he threw himself onto his right, he alw
+[7m--More--(89%)[27mays rolled back to where he was. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the flounderi
+[7m--More--(89%)[27mng legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before. "Oh, God", he thought, "what a s
+[7m--More--(90%)[27mtrenuous career it is that I've chosen! Travelling day in and day out. Doing business like this takes much more effort than doing your 
+[7m--More--(90%)[27mown business at home, and on top of that there's the curse of travelling, worries about making train connections, bad and irregular foo
+[7m--More--(90%)[27md, contact with different people all the time so that you can never get to know anyone or become friendly with them. It can all go to H
+[7m--More--(90%)[27mell!" He felt a slight itch up on his belly; pushed himself slowly up on his back towards the headboard so that he could lift his head 
+[7m--More--(91%)[27mbetter; found where the itch was, and saw that it was covered with lots of little white spots which he didn't know what to make of; and
+[7m--More--(91%)[27m when he tried to feel the place with one of his legs he drew it quickly back because as soon as he touched it he was overcome by a col
+[7m--More--(91%)[27md shudder. He slid back into his former position. "Getting up early all the time", he thought, "it makes you stupid. You've got to get 
+[7m--More--(92%)[27menough sleep. Other travelling salesmen live a life of luxury. For instance, whenever I go back to the guest house during the morning t
+[7m--More--(92%)[27mo copy out the contract, these gentlemen are always still sitting there eating their breakfasts. I ought to just try that with my boss;
+[7m--More--(92%)[27m I'd get kicked out on the spot. But who knows, maybe that would be the best thing for me. If I didn't have my parents to think about I
+[7m--More--(92%)[27m'd have given in my notice a long time ago, I'd have gone up to the boss and told him just what I think, tell him everything I would, l
+[7m--More--(93%)[27met him know just what I feel. He'd fall right off his desk! And it's a funny sort of business to be sitting up there at your desk, talk
+[7m--More--(93%)[27ming down at your subordinates from up there, especially when you have to go right up close because the boss is hard of hearing. Well, t
+[7m--More--(93%)[27mhere's still some hope; once I've got the money together to pay off my parents' debt to him - another five or six years I suppose - tha
+[7m--More--(93%)[27mt's definitely what I'll do. That's when I'll make the big change. First of all though, I've got to get up, my train leaves at five." A
+[7m--More--(94%)[27mnd he looked over at the alarm clock, ticking on the chest of drawers. "God in Heaven!" he thought. It was half past six and the hands 
+[7m--More--(94%)[27mwere quietly moving forwards, it was even later than half past, more like quarter to seven. Had the alarm clock not rung? He could see 
+[7m--More--(94%)[27mfrom the bed that it had been set for four o'clock as it should have been; it certainly must have rung. Yes, but was it possible to qui
+[7m--More--(95%)[27metly sleep through that furniture-rattling noise? True, he had not slept peacefully, but probably all the more deeply because of that. 
+[7m--More--(95%)[27mWhat should he do now? The next train went at seven; if he were to catch that he would have to rush like mad and the collection of samp
+[7m--More--(95%)[27mles was still not packed, and he did not at all feel particularly fresh and lively. And even if he did catch the train he would not avo
+[7m--More--(95%)[27mid his boss's anger as the office assistant would have been there to see the five o'clock train go, he would have put in his report abo
+[7m--More--(96%)[27mut Gregor's not being there a long time ago. The office assistant was the boss's man, spineless, and with no understanding. What about 
+[7m--More--(96%)[27mif he reported sick? But that would be extremely strained and suspicious as in fifteen years of service Gregor had never once yet been 
+[7m--More--(96%)[27mill. His boss would certainly come round with the doctor from the medical insurance company, accuse his parents of having a lazy son, a
+[7m--More--(96%)[27mnd accept the doctor's recommendation not to make any claim as the doctor believed that no-one was ever ill but that many were workshy.
+[7m--More--(97%)[27m And what's more, would he have been entirely wrong in this case? Gregor did in fact, apart from excessive sleepiness after sleeping fo
+[7m--More--(97%)[27mr so long, feel completely well and even felt much hungrier than usual. One morning, when Gregor Samsa woke from troubled dreams, he fo
+[7m--More--(97%)[27mund himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could 
+[7m--More--(98%)[27msee his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready
+[7m--More--(98%)[27m to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.
+[7m--More--(98%)[27m "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully betw
+[7m--More--(98%)[27meen its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above 
+[7m--More--(99%)[27mit there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fi
+[7m--More--(99%)[27mtted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewe
+[7m--More--(99%)[27mr. Gregor then turned to look out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel qu
+[7m--More--(99%)[27mite sad. "How about if I sleep a little bit longer
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ 
+bash-4.1$ exit
+exit
+
+Script done on Thu 24 Mar 2016 01:05:17 AM CDT

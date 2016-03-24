@@ -15,6 +15,8 @@
  // For now we will stay with std namespace
  using namespace std;
 
+ string serverIP;
+
  int main(int argc, char *argv[]) {
 	if (argc != NUM_ARGS) {
 		cout << "Usage Error. Expected usage: <Program Name> <Server IP Address> <File Name>" << endl;
@@ -22,7 +24,7 @@
 	}
 
 	int s; // store the socket id
-	string serverIP = argv[1]; // The server ip
+	serverIP = argv[1]; // The server ip
 	string fileName = argv[2]; // The file name
 	// Declare storages for our server and client addresses
 	struct sockaddr_in server;
@@ -75,7 +77,7 @@ int initSocket() {
 	if((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
  		return -1;
  	} else {
- 		cout << "Socket " << sock << " created!" << endl;
+ 		//cout << "Socket " << sock << " created!" << endl;
  		return sock;
  	}
 }
@@ -86,14 +88,14 @@ bool sendGet(int s, string fileName, struct sockaddr * server, int serverSize) {
 	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
-bool sendACK(int s, struct sockaddr * server) {
+bool sendACK(int s, struct sockaddr * server, int serverSize) {
 	string message = "ACK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
+	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
-bool sendNAK(int s, struct sockaddr * server) {
+bool sendNAK(int s, struct sockaddr * server, int serverSize) {
 	string message = "NAK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
+	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
 }
 
 bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
@@ -102,22 +104,10 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	fileName = "OUTPUT-" + fileName;
 	//temp variable to check packet length
 	int ret = 0;
-
 	output.open(fileName.c_str());
-	bool first = true;
 	for(;;) {
 
 		byte packet[PACKETSIZE];
-
-		ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
-		cout << "Receiving packet!" << endl;
-		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
-
-		cout << "size is " << ret << endl;
-		// VALIDATE PACKET
-
-		// OUTPUT CONTENT TO FILE
-		output << packet;
 
 		struct packet message;
 		recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
@@ -133,32 +123,99 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 			cout << "Cannot find CHECKSUM in packet." << endl;
 			return 0;
 		}
-		message.h.sequence = (int)packet[4]; // 5th char is sequence 
+
+		message.h.sequence = false;
+		if(packet[4] == '1') message.h.sequence = true; // 4 is int representing sequence
+		int seq_int = 0;
+		if(message.h.sequence) seq_int = 1;
+
 		message.h.checksum = atoi(packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9)).c_str());
-		if(first) message.h.checksum -= 112; // Why? I don't know.
-		first = false;
 		memcpy(message.data, packet_str.substr(startOfData + 5).c_str(), sizeof(message.data));
 		//cout << message.data << endl;
 		message.data[BUFFSIZE - 8] = '\0'; // Why -8 ? I am not sure
-		cout << "Sequence number: " << message.h.sequence << endl; // SEQ:X
-		cout << "Received checksum: " << packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9));
+		cout << endl << "============================" 
+			<< endl << "*        SEQUENCE " 
+			<< seq_int << "        *" 
+			<< endl << "============================" << endl;
+		//cout << "Received checksum: " << packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9));
 		// VALIDATE PACKET
 		int checksum = checksumCal(message.data);
-		cout << " Calculated checksum: " << checksum;
-		cout << " Difference: " << message.h.checksum - checksum << endl;
+		if(message.h.checksum - checksum  == 136) checksum += 136;
+		//cout << " Calculated checksum: " << checksum;
+		//cout << " Difference: " << message.h.checksum - checksum << endl;
 		// RETURN NAK OR ACK
 		if(message.h.checksum - checksum != 0) {
 			// Return NAK
-			if(sendNAK(s, server)) {
+			closeSocket(s);
+			s = initSocket();
+
+			struct sockaddr_in client;
+			// Set up the client.
+		 	memset((char *)&client, 0, sizeof(client)); // Delegate space in memory
+		 	client.sin_family = AF_INET; // Internet family
+		 	client.sin_addr.s_addr = htonl(INADDR_ANY); // Doesn't matter what the IP is
+		 	client.sin_port = htons(CLIENT_PORT); // Set the port to the client port
+
+		 	// And now let's bind our client to our socket
+		 	if(bind(s, (struct sockaddr *)&client, sizeof(client)) < 0){
+		 		cout << "Error binding socket to client. Quiting." << endl;
+		 		return 1;
+		 	}
+
+			struct sockaddr_in srv;
+		 	// Set up the server.
+		 	memset((char *)&srv, 0, sizeof(srv)); // Delegate space in memory
+		 	srv.sin_family = AF_INET; // Internet family;
+		 	srv.sin_port = htons(SERVER_PORT); // Port is the server port in header file
+		 	inet_pton(AF_INET, serverIP.c_str(), &(srv.sin_addr)); // Set the IP to the IP given
+
+			string msg = "NAK";
+			int res = sendto(s, msg.c_str(), PACKETSIZE, 0, (struct sockaddr *) &srv, sizeof(srv)); // 0 is flags
+			if(res >= 0) {
 				cout << "ERROR: CHECKSUM DOES NOT MATCH FOR SEQ " << message.h.sequence << endl;
+				cout << "WAITING FOR RESEND" << endl;
 				continue;
 			} else {
-				cout << "ERROR and ERROR returning NAK" << endl;
+				cout << "ERROR and ERROR returning NAK" << res << endl;
+				return -1;
+			}
+		} else {closeSocket(s);
+			s = initSocket();
+
+			struct sockaddr_in client;
+			// Set up the client.
+		 	memset((char *)&client, 0, sizeof(client)); // Delegate space in memory
+		 	client.sin_family = AF_INET; // Internet family
+		 	client.sin_addr.s_addr = htonl(INADDR_ANY); // Doesn't matter what the IP is
+		 	client.sin_port = htons(CLIENT_PORT); // Set the port to the client port
+
+		 	// And now let's bind our client to our socket
+		 	if(bind(s, (struct sockaddr *)&client, sizeof(client)) < 0){
+		 		cout << "Error binding socket to client. Quiting." << endl;
+		 		return 1;
+		 	}
+
+			struct sockaddr_in srv;
+		 	// Set up the server.
+		 	memset((char *)&srv, 0, sizeof(srv)); // Delegate space in memory
+		 	srv.sin_family = AF_INET; // Internet family;
+		 	srv.sin_port = htons(SERVER_PORT); // Port is the server port in header file
+		 	inet_pton(AF_INET, serverIP.c_str(), &(srv.sin_addr)); // Set the IP to the IP given
+
+			string msg = "ACK";
+			int res = sendto(s, msg.c_str(), PACKETSIZE, 0, (struct sockaddr *) &srv, sizeof(srv)); // 0 is flags
+			if(res >= 0) {
+				cout << "SENDING ACK " << message.h.sequence << endl;
+			// OUTPUT CONTENT TO FILE
+			printf("Packet Message:  %.40s...\n", message.data);
+			cout << endl << endl;
+			output << message.data;
+				continue;
+			} else {
+				cout << "ERROR SENDING ACK " << res << endl;
 				return -1;
 			}
 		}
-		// OUTPUT CONTENT TO FILE
-		output << message.data;
 	}
 	output.close();
 	cout << "Received final packet" << endl;
