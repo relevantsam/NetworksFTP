@@ -25,10 +25,19 @@
  using namespace std;
 
  int main(int argc, char *argv[]) {
+	if(argc != 2)
+	{
+		cout << "Usage Error. Expected usage: <Program Name> <Probability of Packet Damage> (represented as an integer) <Probability of Packet Loss> (also as an integer" << endl;
+		return 0;
+	}
+
  	int sock, n, p;
  	struct sockaddr_in server;
  	struct sockaddr_in client;
  	socklen_t client_len = sizeof(client);
+
+	int pD = atoi(argv[1]); //probability packet will be damaged
+	int pL = atoi(argv[2]); //probability that a packet will be lost
 
  	byte buf[BUFFSIZE];
 	ifstream file;
@@ -114,7 +123,7 @@
 
 		cout << message.data << endl;
 
-		sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
+		sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
 
  		// Wait for ACK/NACK
 		int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
@@ -133,7 +142,7 @@
 			{
 				cout << "sequence " << message.h.sequence << " NACK\n";
 				cout << "resending...\n";
-				sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
+				sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
 			}
 
 		}
@@ -141,7 +150,7 @@
 		{
 			cout << "sequence " << message.h.sequence << " timeout\n";
 			cout << "resending...\n";
-			sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client));
+			sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
 		}
 
  		for(int i = 0; i < BUFFSIZE; i++) message.data[i] = '\0'; // Empty the buffer. 
@@ -209,7 +218,7 @@ int checksumCal(byte packet[]) {
 	return checksum;
 }
 
-void sendPacket(packet message, int socket, struct sockaddr * client, int size) {
+void sendPacket(packet message, int socket, struct sockaddr * client, int size, int pD, int pL) {
 	const char * seq = "SEQ:0";
 	stringstream strs;
  	strs << message.h.checksum;
@@ -224,9 +233,59 @@ void sendPacket(packet message, int socket, struct sockaddr * client, int size) 
 	strcat(message_str, (char *)message.data);
 	message_str[PACKETSIZE] = '\0';
 
-	sendto(socket, message_str, PACKETSIZE+1, 0, client, size); // Send the packet
+	if(gremlin(message, pD, pL))
+	{
+		sendto(socket, message_str, PACKETSIZE+1, 0, client, size); // Send the packet
+	}
 }
 
  void closeSocket(int sd) {
  	close(sd); // Need to close at other end as well
  }
+
+bool gremlin(packet &message, int pD, int pL)
+{
+	srand(time(NULL));
+	int chance = rand() % 100;
+
+	if(chance < pL)
+	{
+		return false;
+	}
+
+	chance = rand() % 100;
+	if(chance < pD)
+	{
+		chance = rand() % 100;
+		if(chance < 70)
+		{
+			//modify 1 bit
+			chance = rand() % (sizeof(message.data));
+			message.data[chance]--;
+		}
+
+		else if(chance >= 70 && chance < 90)
+		{
+			//modify 2 bits
+			chance = rand() % (sizeof(message.data));
+			message.data[chance]--;
+			chance = rand() % (sizeof(message.data));
+			message.data[chance]--;
+		}
+
+		else if(chance >=90 && chance < 100)
+		{
+			//modify 3 bits
+			chance = rand() % (sizeof(message.data));
+			message.data[chance]--;
+			chance = rand() % (sizeof(message.data));
+			message.data[chance]--;
+			chance = rand() % (sizeof(message.data));
+			message.data[chance]--;
+		}
+
+		return true;
+	}
+
+	return true;
+}

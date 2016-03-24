@@ -35,6 +35,8 @@
 
  int reassembly(struct packet);
 
- void sendPacket(packet message, int socket, struct sockaddr * client, int size);
+ void sendPacket(packet message, int socket, struct sockaddr * client, int size, int pD, int pL);
+
+ bool gremlin(packet &message, int pD, int pL);
 
  #endif 

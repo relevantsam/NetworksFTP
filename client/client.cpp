@@ -24,8 +24,6 @@
 	int s; // store the socket id
 	string serverIP = argv[1]; // The server ip
 	string fileName = argv[2]; // The file name
-	int pD = atoi(argv[3]); //Probability a packet is damaged
-	int pL = atoi(argv[4]); //Probability packet is lost
 	// Declare storages for our server and client addresses
 	struct sockaddr_in server;
 	struct sockaddr_in client;
