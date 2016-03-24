@@ -11,10 +11,7 @@
  #include <iostream>
  #include <string.h>
  #include <fstream>
-<<<<<<< HEAD
-=======
  #include <stdlib.h> 
->>>>>>> ed47a0fa793f2dc8203e7f4867242e25c8a9be6e
  // For now we will stay with std namespace
  using namespace std;
 
@@ -27,6 +24,8 @@
 	int s; // store the socket id
 	string serverIP = argv[1]; // The server ip
 	string fileName = argv[2]; // The file name
+	int pD = atoi(argv[3]); //Probability a packet is damaged
+	int pL = atoi(argv[4]); //Probability packet is lost
 	// Declare storages for our server and client addresses
 	struct sockaddr_in server;
 	struct sockaddr_in client;
@@ -105,49 +104,23 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 	fileName = "OUTPUT-" + fileName;
 	//temp variable to check packet length
 	int ret = 0;
-	
-	static struct timeval timeout;
-        timeout.tv_sec = 0;
-        timeout.tv_usec = 20000;
-        static int max_timeout = 5;
-        fd_set select_fds;
-        int rv;
-
-	FD_ZERO(&select_fds);
-	FD_SET(s, &select_fds);
 
 	output.open(fileName.c_str());
 	bool first = true;
 	for(;;) {
-<<<<<<< HEAD
-		rv = select(s + 1, &select_fds, NULL, NULL, &timeout); 		
-
 
 		byte packet[PACKETSIZE];
 
-		if(rv == -1)
-		{
-			perror("select");
-		}
+		ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
+		cout << "Receiving packet!" << endl;
+		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
 
-		else if(rv == 0)
-		{
-			cout << "Timeout occurred! No data after 20 ms" << endl;
-		}
-		else
-		{
-			ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
-			cout << "Receiving packet!" << endl;
-			if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
+		cout << "size is " << ret << endl;
+		// VALIDATE PACKET
 
-			cout << "size is " << ret << endl;
-			// VALIDATE PACKET
+		// OUTPUT CONTENT TO FILE
+		output << packet;
 
-			// OUTPUT CONTENT TO FILE
-			output << packet;
-		}
-=======
-		byte packet[PACKETSIZE];
 		struct packet message;
 		recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
 		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
@@ -188,7 +161,6 @@ bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serve
 		}
 		// OUTPUT CONTENT TO FILE
 		output << message.data;
->>>>>>> ed47a0fa793f2dc8203e7f4867242e25c8a9be6e
 	}
 	output.close();
 	cout << "Received final packet" << endl;
