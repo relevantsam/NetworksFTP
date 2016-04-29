@@ -91,11 +91,6 @@ bool init(int argc, char** argv){
 
   setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
 
-
-  if (!loadFile(fileName)) {
-    cout << "Loading file failed. (filename FILENAME)" << endl;
-    return false; 
-  }
   
   memset((char *)&server, 0, sizeof(server));
   server.sin_family = AF_INET;
@@ -108,7 +103,13 @@ bool init(int argc, char** argv){
   }
  
   fileName = getGet();
- 
+  cout << "test1" << endl;
+
+  if (!loadFile(fileName)) {
+    cout << "Loading file failed. (filename FILENAME)" << endl;
+    return false;
+  }
+  cout << "test2" << endl;
   fstring = string(file);
   cout << "File: " << endl << fstring << endl;
 
@@ -124,13 +125,10 @@ string getGet(){
 	string fileName;
 	int n;
  	for(;;) {
-		cout << "test 2" << endl;
  		n = recvfrom(sock, buffer, PACKETSIZE, 0, (struct sockaddr *)&client, &client_length);
  		buffer[n] = '\0';
  		char * msg = strtok((char *)buffer, " ");
 		string word = msg;
-		cout << "test 1" << endl;
-		cout << word << endl;
 		if(word == "GET") {
 			cout << "GET REQUEST RECEIVED" << endl;
  			msg = strtok(NULL, " ");
@@ -300,7 +298,7 @@ bool sendPacket(){
 	if (dropPacket == true) return false;
 	if (delayPacket == true) packet.setAckNack(1);
 
-    if(sendto(sock, packet.str(), BUFFSIZE + 8, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
+    if(sendto(sock, packet.str(), PACKETSIZE + 1, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
 		cout << "Package sending failed. (socket sock, server address sa, message m)" << endl;
 		return false;
     }
