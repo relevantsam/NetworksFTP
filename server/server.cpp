@@ -1,89 +1,127 @@
-/*
- * FTP SERVER
- * 
- * Functionality: 
- * 
- *
- */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <iostream>
+#include <fstream>
+#include <boost/lexical_cast.hpp>
+#include "packet.h"
 
-  // INCLUDE SOCKET REQUIREMENTS
- #include <sys/types.h> // Basic sys data types
- #include <sys/socket.h> // Basic socked definitions
- #include <netinet/in.h> // Basic internet definitiions
- #include <arpa/inet.h> 
- #include <netdb.h> // Needed for obtaining server address
- #include <unistd.h> // Needed to close socket
- // Include header file
- #include "server.h"
- // Other incldues
- #include <iostream>
- #include <cstring>
- #include <fstream>
- #include <sstream>
- #include <sys/time.h>
- #include <cstdlib>
- // For now we will stay with std namespace
- using namespace std;
+#define USAGE "Usage Error. Expected usage: <Program Name> <Probability of Packet Damage> (represented as an integer) <Probability of Packet Loss> (also as an integer) <Probability of Packet Delay> (also an integer)"
+#define PORT 10073
+#define PACKETSIZE 256
+#define ACK 0
+#define NAK 1
+#define BUFFSIZE 505
+#define TIMEOUT 15 //in ms
+#define WINDOW_SIZE 16
 
- int main(int argc, char *argv[]) {
-	if(argc != 3)
-	{
-		cout << "Usage Error. Expected usage: <Program Name> <Probability of Packet Damage> (represented as an integer) <Probability of Packet Loss> (also as an integer" << endl;
-		return 0;
-	}
+using namespace std;
 
- 	int sock, n, p;
- 	struct sockaddr_in server;
- 	struct sockaddr_in client;
- 	socklen_t client_len = sizeof(client);
+bool isvpack(unsigned char * p);
+bool init(int argc, char** argv);
+bool loadFile();
+bool sendFile();
+bool isAck();
+void handleAck();
+void handleNak(int& x);
+bool* gremlin(Packet * pack, int pC, int pL, int pD);
+Packet createPacket(int index);
+void loadWindow();
+bool sendPacket();
+bool getGet();
 
-	int pD = atoi(argv[1]); //probability packet will be damaged
-	int pL = atoi(argv[2]); //probability that a packet will be lost
+struct sockaddr_in server;
+struct sockaddr_in client;
+socklen_t client_len;
+int rlen;
+int sock;
+bool ack;
+string fstring;
+char * file;
+string fileName;
+int pC;
+int pL;
+int pD;
+int delayT;
+Packet packet;
+Packet window[16];
+int length;
+bool dropPacket;
+bool delayPacket;
+int timeoutMS;
+unsigned char buffer[BUFSIZE];
+int base;
 
- 	byte buf[BUFFSIZE];
-	ifstream file;
+int main(int argc, char** argv) {
+  
+  if(!init(argc, argv)) return -1;
+  
+  if(sendFile()) cout << "GET Testfile complete." << endl;
+  
+  return 0;
+}
 
-	struct packet packetBuffer[16] = NULL;
+bool init(int argc, char** argv){
 
-	struct timeval stTimeOut;
+  if(argc != 4) { 
+    cout << USAGE << endl;
+    return false;
+  }
 
-	fd_set stReadFDS;
-
-	//set timeout for 20ms
-	stTimeOut.tv_sec = 0;
-	stTimeOut.tv_usec = 15000;
-
-	sock = initSocket();
-	if(sock < 0) return 0;
-
- 	/*if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
- 		cout << "Socket creation failed." << endl;
- 		return 0;
- 	} else {
- 		cout << "Socket created! Socket " << socket << endl;
- 	}*/
-
- 	// Set up the server.
- 	/*memset((char *)&server, 0, sizeof(server));
- 	server.sin_family = AF_INET;
- 	server.sin_addr.s_addr = htonl(INADDR_ANY);
- 	server.sin_port = htons(SERVER_PORT);
-
- 	cout << "Server allocated" << endl;*/
+  pC = atoi(argv[1]);
+  pL = atoi(argv[2]);
+  pD = atoi(argv[3]);
 
 
- 	// Associate socket with server
- 	/*if(bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
- 		cout << "Socket failed to bind to server." << endl;
- 		return 0;
- 	} else {
- 		cout << "Socket bound to server." << endl << endl;
- 	}*/
+  struct timeval timeout;
+  timeout.tv_usec = TIMEOUT * 1000;
+  timeoutMS = TIMEOUT;
 
-	FD_SET(sock, &stReadFDS);
+  /* Create our socket. */
+  if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    cout << "Socket creation failed. (socket sock)" << endl;
+    return 0;
+  }
 
- 	cout << "============================" << endl << "+      SERVER RUNNING      +" << endl << "============================" << endl;
- 	string fileName;
+  setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+
+
+  fileName = getGet();
+
+  if (!loadFile(fileName)) {
+    cout << "Loading file failed. (filename FILENAME)" << endl;
+    return false; 
+  }
+  
+  memset((char *)&server, 0, sizeof(server));
+  server.sin_family = AF_INET;
+  server.sin_addr.s_addr = htonl(INADDR_ANY);
+  server.sin_port = htons(PORT);
+
+  if (bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
+    cout << "Socket binding failed. (socket sock, address server)" << endl;
+    return 0;
+  }
+  
+  fstr = string(file);
+  cout << "File: " << endl << fstr << endl;
+
+  base = 0;
+  dropPck = false;
+  client_length = sizeof(client);
+
+  
+  return true;
+}
+
+string getGet(){
+	string fileName;
  	for(;;) {
  		n = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
  		buf[n] = '\0';
@@ -97,240 +135,236 @@
  			break;
 		} else {
 			cout << "Request rejected." << endl;
-			return 0;
+			return NULL;
 		}
  	}
+	return fileName;
+}
 
- 	file.open(fileName.c_str(), ios::in);
- 	if(!file.is_open()) {
- 		cout << "File failed to open." << fileName << endl;
- 		return 0;
- 	} else {
- 		cout << "Opened " << fileName << endl;
- 	}
- 	int seq = 0; // sequence is integer; need to add current sequence check.....
- 	while(!file.eof()) {
-		// Init packet buffer
-		if(packetBuffer[15] == NULL)
-		{
-			initPacketBuffer(&file, &packetBuffer, &seq);
-		}
+bool isvpack(unsigned char * p) {
+  cout << endl << "=== IS VALID PACKET === " << endl;
 
-		/*message.h.sequence = seq % 32;
-		file.read((char *)message.data, BUFFSIZE - 1);
- 		//message.data[BUFFSIZE] = '\0';
-		message.h.checksum = checksumCal(message.data);
-		cout << endl << "============================" 
-			<< endl << "*        SEQUENCE " 
-			<< message.h.sequence << "        *" 
-			<< endl << "============================" << endl;
- 		printf("Packet Message:  %.40s...\n", message.data);
+  char * sequenceNumberString = new char[2];
+  memcpy(sequenceNumberString, &p[0], 1);
+  sequenceNumberString[1] = '\0';
 
-		cout << "Packet Checksum: " << message.h.checksum << endl;
+  char * checksumString = new char[7];
+  memcpy(checksumString, &p[1], 6);
+  checksumString[6] = '\0';
+      
+  char * databuffer = new char[121 + 1];
+  memcpy(databuffer, &p[2], 121);
+  databuffer[121] = '\0';
 
-		cout << message.data << endl;*/
+  cout << "Seq. num: " << sequenceNumberString << endl;
+  cout << "Checksum: " << checksumString << endl;
+  cout << "Message: " << databuffer << endl;
 
-		sendPacketWindow(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
+  int sequenceNum = boost::lexical_cast<int>(sns);
+  int checksum = boost::lexical_cast<int>(css);
 
-		//Modify to sendPacketWindow(message, sock, (struct sockaddr *)&client, sizeof(client, pD, pL, currseq, windowMax);
-		//Add packet buffer perhaps
+  Packet pk (0, databuffer);
+  pk.setSequenceNum(sequenceNum);
 
- 		// Wait for ACK/NACK
-		int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
-		if(FD_ISSET(sock, &stReadFDS))
-		{
-			p = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
-			buf[p] = '\0';
-			char * ACKmsg = strtok((char *)buf, " ");
-			//acknum = something figure it out
-			string ACKword = ACKmsg;
-			if(ACKword == "ACK" && ACKnum == currseq + 1)
-			{
-				cout << "sequence " << message.h.sequence << " ACK\n"; //packet accepted, in order, slide window forward
-				//currseq++
-				shiftCongestionWindow(file, packetBuffer, seq)
+  // change to validate based on checksum and sequence number
+
+  if(sequenceNum == 0) return false;
+  if(checksum != pk.generateCheckSum()) return false;
+  return true;
+}
+
+
+bool loadFile(fileName) {
+
+  ifstream fileStream;
+  fileStream.open(fileName, ifstream::binary);
+
+  if(fileStream) {
+    fileStream.seekg(0, fileStream.end);
+    length = fileStream.tellg();
+    fileStream.seekg(0, fileStream.beg);
+
+    file = new char[length];
+
+    cout << "Reading " << length << " characters..." << endl;
+    fileStream.read(file, length);
+
+    if(!fileStream) { cout << "File reading failed. (filename " << fileName << "). Only " << fileStream.gcount() << " could be read."; return false; }
+    fileStream.close();
+  }
+  return true;
+}
+
+void loadWindow(){
+	for(int i = base; i < base + WINDOW_SIZE; i++) {
+		window[i-base] = createPacket(i);
+		if(strlen(window[i-base].getDataBuffer()) < BUFFSIZE && window[i-base].chksm()) { 
+			for(++i; i < base + WIN_SIZE; i++){
+				window[i-base].loadDataBuffer("\0");
 			}
-
-			else if(ACKword == "NACK")
-			{
-				cout << "sequence " << message.h.sequence << " NACK\n"; \\Corrupted packet, resend window
-				cout << "resending...\n";
-				sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
-			}
-
+			
 		}
-		else if(t == 0)
-		{
-			cout << "sequence " << message.h.sequence << " timeout\n"; \\timeout resend window
-			cout << "resending...\n";
-			sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
-		}
-
- 		for(int i = 0; i < BUFFSIZE; i++) message.data[i] = '\0'; // Empty the buffer. 
- 		seq = seq + 1;
- 	}
- 	sendto(sock, "\0", 1, 0, (struct sockaddr *)&client, sizeof(client));
-	file.close();
- 	close(sock);
- 	return 0;
- }
-
- /*
-  * Initialize the socket and bind it to the server
-  */
- int initSocket() {
- 	/*
- 	 * Declare variables
- 	 */
- 	// sd is an int representing socket or -1 if socket failed
- 	int sd;
- 	// Structure modeling the client machine
- 	struct sockaddr_in server;
-
- 	// Create the socket
-	if((sd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-	 		cout << "Socket creation failed." << endl;
-	 		return -1;
- 	} else {
- 		cout << "Socket created! Socket " << socket << endl;
- 	}
-
-
-
- 	/* 
- 	 * Fill server socket
- 	 */
- 	memset((char *)&server, 0, sizeof(server));
- 	// AF_INET is internet protocol
- 	server.sin_family = AF_INET;
- 	// Assigns address to IP address of machine
- 	server.sin_addr.s_addr = htonl(INADDR_ANY); // htonl takes long int from host to network byte order
- 	// Assigns port number to port number specified in head file 
- 	server.sin_port = htons(SERVER_PORT); // htons takes short int from host to network byte order
- 	// AF_INET is internet protocol, SOCK_DGRAM is UDP, 0 selects protocol
- 	// Associate socket with local machine
- 	if(bind(sd, (struct sockaddr *)&server, sizeof(server)) < 0) {
- 		cout << "Socket failed to bind to server." << endl;
- 		return -1;
- 	} else {
- 		cout << "Socket bound to server." << endl << endl;
- 	}
- 	return sd;
- }
-
- void runServer() {
- 	
- }
-
-// Function to calculate checksum of packet
-int checksumCal(byte packet[]) {
-	int checksum = 0;
-	for(int i = 0; i < BUFFSIZE; i++) {
-		checksum += (int) packet[i];
 	}
-	return checksum;
+	
 }
 
-void sendPacketWindow(packet[] packetBuffer, int socket, struct sockaddr * client, int size, int pD, int pL) {
-	for(int i = 0; i < 16; i++)
-	{
-		const char * seq = strcat("SEQ: ", packetBuffer[i].h.sequence);
-		stringstream strs;
- 		strs << message.h.checksum;
-  		string temp_str = strs.str();
-		char  const* checksum = temp_str.c_str();
-		char message_str[PACKETSIZE + 1];
-		strcpy(message_str, seq);
-		strcat(message_str, "CHECKSUM:");
-		strcat(message_str, checksum);
-		strcat(message_str, "DATA:");
-		strcat(message_str, (char *)message.data);
-		message_str[PACKETSIZE] = '\0';
+bool sendFile() {
+	fd_set stReadFDS; 
 
-		if(gremlin(message, pD, pL))
-		{
-			sendto(socket, message_str, PACKETSIZE+1, 0, client, size); // Send the packet
+	struct timeval stTimeOut;
+
+
+	FD_ZERO(&stReadFDS);
+	stTimeOut.tv_sec = 0;
+	stTimeOut.tv_usec = 1000 * TIMEOUT;
+	FD_SET(s, &stReadFDS);
+
+	base = 0;
+	int fd_ready;
+	
+	int max_sd;
+	bool hasRead = false;
+	while(base * BUFFSIZE < length) {
+		int final = 0;
+		loadWindow();
+		
+		if(packet.str()[0] == '\0') final = packet.getSequenceNum();
+		for(int i = 0; i < WINDOW_SIZE; i++) {
+			packet = window[i];
+			if(!sendPacket()) continue;
 		}
-}
+		while(final < WINDOW_SIZE - 1) {
+			FD_ZERO(&stReadFDS);
+			stTimeOut.tv_sec = 0;
+			stTimeOut.tv_usec = 1000 * TIMEOUT;
+			FD_SET(s, &stReadFDS);
 
- void closeSocket(int sd) {
- 	close(sd); // Need to close at other end as well
- }
-
-bool gremlin(packet &message, int pD, int pL)
-{
-	srand(time(NULL));
-	int chance = rand() % 100;
-
-	if(chance < pL)
-	{
+			int t = select(sock + 1, &stReadFDS, NULL, NULL, &stTimeOut);
+			if (t == -1){
+				perror("select()");
+			}
+			if (t == 0) {
+				cout << "=== ACK TIMEOUT (select) ===" << endl;
+				cout << "Timed out packet: " << base << endl;
+				break;
+			} 
+			fd_ready = t;
+			for(int u = 0; u <= sock &&  fd_ready > 0; u++){
+				if(final + fd_ready < WINDOW_SIZE){
+					if(final++ == WINDOW_SIZE - 2) break;
+				}
+				if(recvfrom(sock, b, BUFFSIZE + 7, 0, (struct sockaddr *)&client, &client_length) < 0) {
+					cout << "=== ACK TIMEOUT (recvfrom) ===" << endl;
+				} else hasRead = true;
+				if(!hasRead) continue;
+				if(isAck()) {
+					handleAck();
+					final++;
+					if (final == WINDOW_SIZE - 1) break;
+				} else { 
+					cout << "Not an ACK!" << endl; 
+				}
+			}
+		
+		}
+	}
+	if(sendto(sock, "\0", BUFFSIZE, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
+		cout << "Final package sending failed. (socket sock, server address sa, message m)" << endl;
 		return false;
 	}
-
-	chance = rand() % 100;
-	if(chance < pD)
-	{
-		chance = rand() % 100;
-		if(chance < 70)
-		{
-			//modify 1 bit
-			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
-		}
-
-		else if(chance >= 70 && chance < 90)
-		{
-			//modify 2 bits
-			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
-			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
-		}
-
-		else if(chance >=90 && chance < 100)
-		{
-			//modify 3 bits
-			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
-			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
-			chance = rand() % (sizeof(message.data));
-			message.data[chance]--;
-		}
-
-		return true;
-	}
-
 	return true;
 }
 
-void initPacketBuffer(ifstream &file, packet &packetBuffer[])
-{
-	struct packet message;
-	for(int i = 0; i < 16; i++)
-	{
-		message.h.sequence = i;
-		file.read((char *)message.data, BUFFSIZE - 1);
-		message.h.checksum = checksumCal(message.data);
+Packet createPacket(int index){
+    string message = fstr.substr(index * BUFFSIZE, BUFFSIZE);
 
-		packetbuffer[i] = message;
-	}
+	if(message.length() < BUFFSIZE) {
+		message[length - (index * BUFFSIZE)] = '\0';
+    }
+
+    return Packet (index, message.c_str());
 }
 
-void shiftCongestionWindow(ifstream &file, packet &packetBuffer[], int &seq)
-{
-	struct packet message;
+bool sendPacket(){
+	cout << endl;
+    cout << "=== TRANSMISSION START ===" << endl;
+	bool* pckStatus = gremlin(&p, pc, pl, pd);
 
-	for(int i = 0; i < 15; i++)
-	{
-		packetBuffer[i] = packetBuffer[i + 1];
-	}
+	dropPck = pckStatus[0];
+	delayPck = pckStatus[1];
 
-	seq = seq + 1;
+	if (dropPck == true) return false;
+	if (delayPck == true) packet.setAckNack(1);
 
-	message.h.sequence = seq % 32;
-	file.read((char *) message.data, BUFFSIZE - 1);
-	message.h.checksum = checksumCal(message.data);
+    if(sendto(sock, packet.str(), BUFFSIZE + 8, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
+		cout << "Package sending failed. (socket sock, server address sa, message m)" << endl;
+		return false;
+    }
+    return true;
+}
+bool isAck() {
+    cout << endl << "=== SERVER RESPONSE ===" << endl;
+    cout << "Data: " << b << endl;
+    if(b[6] == '\0') return true;
+    else return false;
+}
+void handleAck() {
+	int ack = boost::lexical_cast<int>(b);
+	if(base < ack) base = ack;
+	cout << "Window base: " << base << endl;
+}
+void handleNak(int& x) {
 
-	packetBuffer[15] = message;
-}	
+      char * sequenceNumberString = new char[2];
+      memcpy(sequenceNumberString, &b[0], 1);
+      sequenceNumberString[1] = '\0';
+
+      char * checksumString = new char[5];
+      memcpy(checksumString, &b[1], 5);
+      
+      char * dataBuffer = new char[BUFFSIZE + 1];
+      memcpy(dataBuffer, &b[2], BUFFSIZE);
+      dataBuffer[BUFFSIZE] = '\0';
+
+      cout << "Sequence number: " << sequenceNumberString << endl;
+      cout << "Checksum: " << checksumString << endl;
+
+      Packet pk (0, dataBuffer);
+      pk.setSequenceNum(boost::lexical_cast<int>(sequenceNumberString));
+      pk.setCheckSum(boost::lexical_cast<int>(checksumString));
+
+      if(!pk.chksm()) x--; 
+      else x = (x - 2 > 0) ? x - 2 : 0;
+}
+bool* gremlin(Packet * pack, int pC, int pL, int pD){
+
+  bool* packStatus = new bool[2];
+  int r = rand() % 100;
+
+  packStatus[0] = false;
+  packStatus[1] = false;
+
+  if(r <= (pL)){
+	packStatus[0] = true;
+    cout << "Dropped!" << endl;
+  }
+  else if(r <= (pD)){
+	  packStatus[1] = true;
+	  cout << "Delayed!" << endl;
+  }
+  else if(r <= (pC)){
+    cout << "Corrupted!" << endl;
+    pack->loadDataBuffer((char*)"GREMLIN");
+  }
+
+  char substring[49];
+  memcpy(substring, (pack->getDataBuffer()), 48);
+  substring[48] = '\0';
+
+  cout << "Seq. num: " << pack->getSequenceNum() << endl;
+  cout << "Checksum: " << pack->getCheckSum() << endl;
+  cout << "Message: "  << substring << endl;
+
+  return packStatus;
+}
+

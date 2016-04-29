@@ -1,183 +1,261 @@
-// INCLUDE SOCKET REQUIREMENTS
- #include <sys/types.h> // Basic sys data types
- #include <sys/socket.h> // Basic socked definitions
- #include <netinet/in.h> // Basic internet definitiions
- #include <arpa/inet.h> 
- #include <netdb.h> // Needed for obtaining server address
- #include <unistd.h> // Needed to close socket
- // Include header file
- #include "client.h"
- // Other incldues
- #include <iostream>
- #include <string.h>
- #include <fstream>
- #include <stdlib.h> 
- // For now we will stay with std namespace
- using namespace std;
-
- int main(int argc, char *argv[]) {
-	if (argc != NUM_ARGS) {
-		cout << "Usage Error. Expected usage: <Program Name> <Server IP Address> <File Name>" << endl;
-		return 0;
-	}
-
-	int s; // store the socket id
-	string serverIP = argv[1]; // The server ip
-	string fileName = argv[2]; // The file name
-	// Declare storages for our server and client addresses
-	struct sockaddr_in server;
-	struct sockaddr_in client;
-
-	if((s = initSocket()) < 0) {
- 		cout << "Error creating socket. Quiting." << endl;
-		return 0;
-	}
-	
-	// Set up the client.
- 	memset((char *)&client, 0, sizeof(client)); // Delegate space in memory
- 	client.sin_family = AF_INET; // Internet family
- 	client.sin_addr.s_addr = htonl(INADDR_ANY); // Doesn't matter what the IP is
- 	client.sin_port = htons(CLIENT_PORT); // Set the port to the client port
-
- 	// Set up the server.
- 	memset((char *)&server, 0, sizeof(server)); // Delegate space in memory
- 	server.sin_family = AF_INET; // Internet family;
- 	server.sin_port = htons(SERVER_PORT); // Port is the server port in header file
- 	inet_pton(AF_INET, serverIP.c_str(), &(server.sin_addr)); // Set the IP to the IP given
-
- 	// And now let's bind our client to our socket
- 	if(bind(s, (struct sockaddr *)&client, sizeof(client)) < 0){
- 		cout << "Error binding socket to client. Quiting." << endl;
- 		return 1;
- 	} else {
- 		cout << "Socket successfully bound to client." << endl;
- 	} 
-
- 	cout << endl << "============================" << endl << "+      CLIENT RUNNING      +" << endl << "============================" << endl;
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <boost/lexical_cast.hpp>
+#include "packet.h"
 
 
- 	// Send a get request
-	if(!sendGet(s, fileName, (struct sockaddr *)&server, sizeof(server))) {
-		cout << "Sending GET request failed. Quiting." << endl;
-	} else {
-		cout << "GET request sent for file " << fileName << endl;
-	}
 
-	// Get the file
-	int serverSizeInt = sizeof(server);
-	getFile(fileName, s, (struct sockaddr *)&server, (socklen_t*)&serverSizeInt);
+#define USAGE "Usage Error. Expected usage: <Program Name> <Server IP Address> <File Name> <Packet Delay>"
+#define BUFFSIZE 505
+#define PORT 10070
+#define PAKSIZE 512
+#define ACK 0
+#define NAK 1
+#define WINDOW_SIZE 16
 
-	return closeSocket(s);
+using namespace std;
+
+bool init(int argc, char** argv);
+bool getFile();
+char * recvPkt();
+bool isvpack(unsigned char * p);
+Packet createPacket(int index);
+bool sendPacket();
+bool isAck();
+void handleAck();
+void handleNak(int& x);
+int sequenceNum;
+string hs;
+short int port;
+char * file;
+unsigned char* window[16]; //packet window
+int base; //used to determine position in window of arriving packets
+int length;
+struct sockaddr_in client;
+struct sockaddr_in server;
+socklen_t server_length;
+string fstr;
+bool dropPacket;
+Packet packet;
+int delayT;
+int sock;
+unsigned char b[BUFFSIZE];
+
+int main(int argc, char** argv) {
+ 
+  if (argc != 3) {
+    cout << USAGE << endl;
+    return false;
+
+  }
+ 
+  if(!init(argc, argv)) return -1;
+ 
+  if(sendto(s, "GET Testfile", BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
+    cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+    return false;
+  }
+  
+  getFile();
+
+  return 0;
 }
 
-int initSocket() {
-	int sock;
-	if((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
- 		return -1;
- 	} else {
- 		cout << "Socket " << sock << " created!" << endl;
- 		return sock;
- 	}
+ /*Intitialize base*/
+bool init(int argc, char** argv) {
+  base = 0;
+  sock = 0;
+
+  hs = argv[1]; 
+  port = PORT; 
+
+  delayT = atoi(argv[3]);
+
+
+  if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+    cout << "Socket creation failed. (socket s)" << endl;
+    return false;
+  }
+
+  memset((char *)&client, 0, sizeof(client));
+  client.sin_family = AF_INET;
+  client.sin_addr.s_addr = htonl(INADDR_ANY);
+  client.sin_port = htons(0);
+
+  if (bind(sock, (struct sockaddr *)&client, sizeof(client)) < 0){
+    cout << "Socket binding failed. (socket s, address a)" << endl;
+    return false;
+  }
+
+  memset((char *)&sa, 0, sizeof(sa));
+  server_length.sin_family = AF_INET;
+  server.sin_port = htons(port);
+  inet_pton(AF_INET, hs.c_str(), &(sa.sin_addr));
+
+  cout << endl;
+
+  cout << "Server address (inet mode): " << inet_ntoa(server.sin_addr) << endl;
+  cout << "Port: " << ntohs(server.sin_port) << endl;
+
+  cout << endl << endl;
+
+
+  sequenceNum = 0;
+  dropPacket = false;
+  return true;
 }
 
-// Function to send get request
-bool sendGet(int s, string fileName, struct sockaddr * server, int serverSize) {
- 	string message = "GET " + fileName;
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, serverSize)) >= 0; // 0 is flags
+
+
+Packet createPacket(int index){
+    cout << endl;
+    cout << "=== TRANSMISSION START ===" << endl;
+    string mstr = fstr.substr(index * BUFFSIZE, BUFFSIZE);
+    if(index * BUFFSIZE + BUFFSIZE > length) {
+      mstr[length - (index * BUFFSIZE)] = '\0';
+    }
+    return Packet (sequenceNum, mstr.c_str());
 }
 
-bool sendACK(int s, struct sockaddr * server) {
-	string message = "ACK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
+bool sendPacket(){
+    if(sendto(s, p.str(), BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
+      cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
+      return false;
+    }
+    else return true;
+}
+bool isAck() {
+    recvfrom(sock, b, BUFFSIZE + 7, 0, (struct sockaddr *)&server, &server_length);
+
+    cout << endl << "=== RESPONSE ===" << endl;
+    cout << "Data: " << b << endl;
+    if(b[6] == '0') return true;
+    else return false;
+}
+void handleAck() {
+
+}
+void handleNak(int& x) {
+
+      char * sequenceNumberString = new char[2];
+      memcpy(sequenceNumberString, &b[0], 1);
+      sequenceNumberString[1] = '\0';
+
+      char * checksumString = new char[5];
+      memcpy(checksumString, &b[1], 5);
+      
+      char * dataBuffer = new char[BUFFSIZE + 1];
+      memcpy(dataBuffer, &b[2], BUFFSIZE);
+      dataBuffer[BUFFSIZE] = '\0';
+
+      cout << "Sequence number: " << sequenceNumberString << endl;
+      cout << "Checksum: " << checksumString << endl;
+
+      Packet pk (0, dataBuffer);
+      pk.setSequenceNum(boost::lexical_cast<int>(sequenceNumberString));
+      pk.setCheckSum(boost::lexical_cast<int>(checksumString));
+
+      if(!pk.chksm()) x--; 
+      else x = (x - 2 > 0) ? x - 2 : 0;
 }
 
-bool sendNAK(int s, struct sockaddr * server) {
-	string message = "NAK";
-	return (sendto(s, message.c_str(), PACKETSIZE, 0, server, sizeof(server))) >= 0; // 0 is flags
+bool isvpack(unsigned char * p) {
+
+  char * sequenceNumberString = new char[3];
+  memcpy(sequenceNumberString, &p[0], 3);
+  sequenceNumberString[2] = '\0';
+
+  char * checksumString = new char[6];
+  memcpy(checksumString, &p[2], 5);
+  checksumString[5] = '\0';
+      
+  char * dataBuffer = new char[BUFFSIZE + 1];
+  memcpy(dataBuffer, &p[8], BUFFSIZE);
+  dataBuffer[BUFFSIZE] = '\0';
+
+  int sn = boost::lexical_cast<int>(sequenceNumberString);
+  int cs = boost::lexical_cast<int>(checksumString);
+
+  Packet pk (0, dataBuffer);
+  pk.setSequenceNum(sn);
+
+
+
+  if(!(sn >= (base % 32) && sn <= (base % 32) + WIN_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
+  if(cs != pk.generateCheckSum()) { cout << "Bad checksum." << endl; return false; }
+  return true;
 }
 
-bool getFile(string fileName, int s, struct sockaddr * server, socklen_t * serverSize) {
-	cout << "Waiting for file from the server." << endl;
-	ofstream output;
-	fileName = "OUTPUT-" + fileName;
-	//temp variable to check packet length
-	int ret = 0;
 
-	output.open(fileName.c_str());
-	bool first = true;
-	for(;;) {
+bool getFile(){
+  /* Loop forever, waiting for messages from a client. */
+  cout << "Waiting on port " << PORT << "..." << endl;
 
-		byte packet[PACKETSIZE];
+  ofstream file;
+  string fileName = "OUTPUT-" + argv[1];
+  file.open(fileName.c_str());
 
-		ret = recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
-		cout << "Receiving packet!" << endl;
-		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
+  int rlen;
+  int ack;
+  
+  for (;;) {
+    unsigned char packet[PAKSIZE + 1];
+    unsigned char packetData[BUFFSIZE];
+    rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&server, &server_length);
 
-		cout << "size is " << ret << endl;
-		// VALIDATE PACKET
+	if(packet[0] == '\0') break;
 
-		// OUTPUT CONTENT TO FILE
-		output << packet;
-
-		struct packet message;
-		recvfrom(s, packet, PACKETSIZE, 0, server, serverSize); // 0 is flags
-		if(packet[0] == '\0') break; // If the content is a null character, it is the end of the file
-		string packet_str = (char *)packet;
-		int startOfData = packet_str.find("DATA:");
-		if(!startOfData) {
-			cout << "Cannot find DATA in packet." << endl;
-			return 0;
-		}
-		int startOfChecksum = packet_str.find("CHECKSUM:");
-		if(!startOfChecksum) {
-			cout << "Cannot find CHECKSUM in packet." << endl;
-			return 0;
-		}
-		message.h.sequence = (int)packet[4]; // 5th char is sequence 
-		message.h.checksum = atoi(packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9)).c_str());
-		if(first) message.h.checksum -= 112; // Why? I don't know.
-		first = false;
-		memcpy(message.data, packet_str.substr(startOfData + 5).c_str(), sizeof(message.data));
-		//cout << message.data << endl;
-		message.data[BUFFSIZE - 8] = '\0'; // Why -8 ? I am not sure
-		cout << "Sequence number: " << message.h.sequence << endl; // SEQ:X
-		cout << "Received checksum: " << packet_str.substr(startOfChecksum + 9, startOfData - (startOfChecksum+9));
-		// VALIDATE PACKET
-		int checksum = checksumCal(message.data);
-		cout << " Calculated checksum: " << checksum;
-		cout << " Difference: " << message.h.checksum - checksum << endl;
-		// RETURN NAK OR ACK
-		if(message.h.checksum - checksum != 0) {
-			// Return NAK
-			if(sendNAK(s, server)) {
-				cout << "ERROR: CHECKSUM DOES NOT MATCH FOR SEQ " << message.h.sequence << endl;
-				continue;
-			} else {
-				cout << "ERROR and ERROR returning NAK" << endl;
-				return -1;
-			}
-		}
-		// OUTPUT CONTENT TO FILE
-		output << message.data;
-	}
-	output.close();
-	cout << "Received final packet" << endl;
-	return true;
-}
-
-// Function to close the socket
-int closeSocket(int s) {
-	close(s); // Don't forget to close the other end!
-	return 1;
-}
-
-// Function to calculate checksum of packet
-int checksumCal(byte packet[]) {
-	int checksum = 0;
 	for(int i = 0; i < BUFFSIZE; i++) {
-		if(packet[i] == '\0') break;
-		checksum += (int) packet[i];
-	}
-	return checksum;
+      packetData[i] = packet[i + 8];
+    }
+	packetData[BUFFSIZE] = '\0';
+    if (rlen > 0) {
+	  char * sequenceNumberString = new char[3];
+	  memcpy(sequenceNumberString, &packet[0], 3);
+	  sequenceNumberString[2] = '\0';
+		
+      char * checksumString = new char[6];
+      memcpy(checksumString, &packet[2], 5);
+      checksumString[5] = '\0';
+      cout << endl << endl << "=== RECEIPT" << endl;
+      cout << "Seq. num: " << sequenceNumberString << endl;
+      cout << "Checksum: " << checksumString << endl;
+	  cout << "Payload: " << packetData << endl;
+	  int pid = boost::lexical_cast<int>(sequenceNumberString);
+      if(isvpack(packet)) {
+		if(pid == base % 32) { 
+			base++; //increment base of window
+			file << packetData;
+			file.flush();
+		}
+      } else cout << "%%% ERROR IN PACKET " << pid << "%%%" << endl;
+
+      cout << "Sent response: ";
+      cout << "ACK " << base << endl;
+
+	  if(packet[6] == '1') usleep(delayT*1000);
+
+	  string wbs = to_string((long long)base);
+	  const char * ackval = wbs.c_str();
+
+      if(sendto(sock, ackval, 10, 0, (struct sockaddr *)&server, &server_length) < 0) {
+        cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
+		perror("sendto()");
+        return 0;
+      }
+	  delete sequenceNumberString;
+      delete checksumString;
+    }
+  }
+  cout << "'GET' file transfer complete." << endl;
+  file.close();
+  return true;
 }
+
 
