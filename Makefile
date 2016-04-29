@@ -7,10 +7,10 @@ C = g++ -std=c++0x
 CFLAGS = -c
 
 client: packet.o client.cpp
-	$(C) packet.o client/client.cpp -o client
+	$(C) packet.o client.cpp -o client
 
 server: packet.o server.cpp
-	$(C) packet.o server/server.cpp -o server
+	$(C) packet.o server.cpp -o server
 
 packet.o: packet.h packet.cpp
 	$(C) $(CFLAGS) packet.cpp

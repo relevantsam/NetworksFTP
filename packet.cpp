@@ -2,6 +2,7 @@
 #include <string.h>
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 
   //Constructor
   Packet::Packet () {
@@ -40,7 +41,7 @@
     std::string tempStr(dataBuff);
     std::string packetString;
     std::string checksumString;
-	std::string sequenceNumberString;
+    std::string sequenceNumberString;
 	
     checksumString = std::to_string((long long int)checkSum);
     while(checksumString.length() < 5) checksumString += '0';

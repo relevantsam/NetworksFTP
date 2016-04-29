@@ -22,7 +22,7 @@
 using namespace std;
 
 bool init(int argc, char** argv);
-bool getFile();
+bool getFile(string fn);
 char * recvPkt();
 bool isvpack(unsigned char * p);
 Packet createPacket(int index);
@@ -46,23 +46,28 @@ Packet packet;
 int delayT;
 int sock;
 unsigned char b[BUFFSIZE];
+string fn;
 
 int main(int argc, char** argv) {
  
-  if (argc != 3) {
+  if (argc != 4) {
     cout << USAGE << endl;
     return false;
 
   }
  
+  fn = argv[2];
   if(!init(argc, argv)) return -1;
+
+  string message = "GET " + fn;
+  cout << message << endl;
  
-  if(sendto(s, "GET Testfile", BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
+  if(sendto(sock, message.c_str(), BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
     cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
     return false;
   }
   
-  getFile();
+  getFile(fn);
 
   return 0;
 }
@@ -93,10 +98,10 @@ bool init(int argc, char** argv) {
     return false;
   }
 
-  memset((char *)&sa, 0, sizeof(sa));
-  server_length.sin_family = AF_INET;
+  memset((char *)&server, 0, sizeof(server));
+  server.sin_family = AF_INET;
   server.sin_port = htons(port);
-  inet_pton(AF_INET, hs.c_str(), &(sa.sin_addr));
+  inet_pton(AF_INET, hs.c_str(), &(server.sin_addr));
 
   cout << endl;
 
@@ -124,7 +129,7 @@ Packet createPacket(int index){
 }
 
 bool sendPacket(){
-    if(sendto(s, p.str(), BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
+    if(sendto(sock, packet.str(), BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
       cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
       return false;
     }
@@ -187,18 +192,18 @@ bool isvpack(unsigned char * p) {
 
 
 
-  if(!(sn >= (base % 32) && sn <= (base % 32) + WIN_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
+  if(!(sn >= (base % 32) && sn <= (base % 32) + WINDOW_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
   if(cs != pk.generateCheckSum()) { cout << "Bad checksum." << endl; return false; }
   return true;
 }
 
 
-bool getFile(){
+bool getFile(string fn){
   /* Loop forever, waiting for messages from a client. */
   cout << "Waiting on port " << PORT << "..." << endl;
 
   ofstream file;
-  string fileName = "OUTPUT-" + argv[1];
+  string fileName = "OUTPUT-" + fn;
   file.open(fileName.c_str());
 
   int rlen;
@@ -207,7 +212,7 @@ bool getFile(){
   for (;;) {
     unsigned char packet[PAKSIZE + 1];
     unsigned char packetData[BUFFSIZE];
-    rlen = recvfrom(s, packet, PAKSIZE + 1, 0, (struct sockaddr *)&server, &server_length);
+    rlen = recvfrom(sock, packet, PAKSIZE + 1, 0, (struct sockaddr *)&server, &server_length);
 
 	if(packet[0] == '\0') break;
 
@@ -244,7 +249,7 @@ bool getFile(){
 	  string wbs = to_string((long long)base);
 	  const char * ackval = wbs.c_str();
 
-      if(sendto(sock, ackval, 10, 0, (struct sockaddr *)&server, &server_length) < 0) {
+      if(sendto(sock, ackval, 10, 0, (struct sockaddr *)&server, server_length) < 0) {
         cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
 		perror("sendto()");
         return 0;

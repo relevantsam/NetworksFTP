@@ -25,7 +25,7 @@ using namespace std;
 
 bool isvpack(unsigned char * p);
 bool init(int argc, char** argv);
-bool loadFile();
+bool loadFile(string fileName);
 bool sendFile();
 bool isAck();
 void handleAck();
@@ -34,11 +34,11 @@ bool* gremlin(Packet * pack, int pC, int pL, int pD);
 Packet createPacket(int index);
 void loadWindow();
 bool sendPacket();
-bool getGet();
+string getGet();
 
 struct sockaddr_in server;
 struct sockaddr_in client;
-socklen_t client_len;
+socklen_t client_length;
 int rlen;
 int sock;
 bool ack;
@@ -55,14 +55,14 @@ int length;
 bool dropPacket;
 bool delayPacket;
 int timeoutMS;
-unsigned char buffer[BUFSIZE];
+unsigned char buffer[BUFFSIZE];
 int base;
 
 int main(int argc, char** argv) {
   
   if(!init(argc, argv)) return -1;
   
-  if(sendFile()) cout << "GET Testfile complete." << endl;
+  if(sendFile()) cout << "GET file complete." << endl;
   
   return 0;
 }
@@ -92,8 +92,6 @@ bool init(int argc, char** argv){
   setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
 
 
-  fileName = getGet();
-
   if (!loadFile(fileName)) {
     cout << "Loading file failed. (filename FILENAME)" << endl;
     return false; 
@@ -108,12 +106,14 @@ bool init(int argc, char** argv){
     cout << "Socket binding failed. (socket sock, address server)" << endl;
     return 0;
   }
-  
-  fstr = string(file);
-  cout << "File: " << endl << fstr << endl;
+ 
+  fileName = getGet();
+ 
+  fstring = string(file);
+  cout << "File: " << endl << fstring << endl;
 
   base = 0;
-  dropPck = false;
+  dropPacket = false;
   client_length = sizeof(client);
 
   
@@ -122,11 +122,15 @@ bool init(int argc, char** argv){
 
 string getGet(){
 	string fileName;
+	int n;
  	for(;;) {
- 		n = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
- 		buf[n] = '\0';
- 		char * msg = strtok((char *)buf, " ");
+		cout << "test 2" << endl;
+ 		n = recvfrom(sock, buffer, PACKETSIZE, 0, (struct sockaddr *)&client, &client_length);
+ 		buffer[n] = '\0';
+ 		char * msg = strtok((char *)buffer, " ");
 		string word = msg;
+		cout << "test 1" << endl;
+		cout << word << endl;
 		if(word == "GET") {
 			cout << "GET REQUEST RECEIVED" << endl;
  			msg = strtok(NULL, " ");
@@ -160,8 +164,8 @@ bool isvpack(unsigned char * p) {
   cout << "Checksum: " << checksumString << endl;
   cout << "Message: " << databuffer << endl;
 
-  int sequenceNum = boost::lexical_cast<int>(sns);
-  int checksum = boost::lexical_cast<int>(css);
+  int sequenceNum = boost::lexical_cast<int>(sequenceNumberString);
+  int checksum = boost::lexical_cast<int>(checksumString);
 
   Packet pk (0, databuffer);
   pk.setSequenceNum(sequenceNum);
@@ -174,7 +178,7 @@ bool isvpack(unsigned char * p) {
 }
 
 
-bool loadFile(fileName) {
+bool loadFile(string fileName) {
 
   ifstream fileStream;
   fileStream.open(fileName, ifstream::binary);
@@ -199,7 +203,7 @@ void loadWindow(){
 	for(int i = base; i < base + WINDOW_SIZE; i++) {
 		window[i-base] = createPacket(i);
 		if(strlen(window[i-base].getDataBuffer()) < BUFFSIZE && window[i-base].chksm()) { 
-			for(++i; i < base + WIN_SIZE; i++){
+			for(++i; i < base + WINDOW_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
 			
@@ -217,7 +221,7 @@ bool sendFile() {
 	FD_ZERO(&stReadFDS);
 	stTimeOut.tv_sec = 0;
 	stTimeOut.tv_usec = 1000 * TIMEOUT;
-	FD_SET(s, &stReadFDS);
+	FD_SET(sock, &stReadFDS);
 
 	base = 0;
 	int fd_ready;
@@ -237,7 +241,7 @@ bool sendFile() {
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
-			FD_SET(s, &stReadFDS);
+			FD_SET(sock, &stReadFDS);
 
 			int t = select(sock + 1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t == -1){
@@ -253,7 +257,7 @@ bool sendFile() {
 				if(final + fd_ready < WINDOW_SIZE){
 					if(final++ == WINDOW_SIZE - 2) break;
 				}
-				if(recvfrom(sock, b, BUFFSIZE + 7, 0, (struct sockaddr *)&client, &client_length) < 0) {
+				if(recvfrom(sock, buffer, BUFFSIZE + 7, 0, (struct sockaddr *)&client, &client_length) < 0) {
 					cout << "=== ACK TIMEOUT (recvfrom) ===" << endl;
 				} else hasRead = true;
 				if(!hasRead) continue;
@@ -276,7 +280,7 @@ bool sendFile() {
 }
 
 Packet createPacket(int index){
-    string message = fstr.substr(index * BUFFSIZE, BUFFSIZE);
+    string message = fstring.substr(index * BUFFSIZE, BUFFSIZE);
 
 	if(message.length() < BUFFSIZE) {
 		message[length - (index * BUFFSIZE)] = '\0';
@@ -288,13 +292,13 @@ Packet createPacket(int index){
 bool sendPacket(){
 	cout << endl;
     cout << "=== TRANSMISSION START ===" << endl;
-	bool* pckStatus = gremlin(&p, pc, pl, pd);
+	bool* pckStatus = gremlin(&packet, pC, pL, pD);
 
-	dropPck = pckStatus[0];
-	delayPck = pckStatus[1];
+	dropPacket = pckStatus[0];
+	delayPacket = pckStatus[1];
 
-	if (dropPck == true) return false;
-	if (delayPck == true) packet.setAckNack(1);
+	if (dropPacket == true) return false;
+	if (delayPacket == true) packet.setAckNack(1);
 
     if(sendto(sock, packet.str(), BUFFSIZE + 8, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
 		cout << "Package sending failed. (socket sock, server address sa, message m)" << endl;
@@ -304,26 +308,26 @@ bool sendPacket(){
 }
 bool isAck() {
     cout << endl << "=== SERVER RESPONSE ===" << endl;
-    cout << "Data: " << b << endl;
-    if(b[6] == '\0') return true;
+    cout << "Data: " << buffer << endl;
+    if(buffer[6] == '\0') return true;
     else return false;
 }
 void handleAck() {
-	int ack = boost::lexical_cast<int>(b);
+	int ack = boost::lexical_cast<int>(buffer);
 	if(base < ack) base = ack;
 	cout << "Window base: " << base << endl;
 }
 void handleNak(int& x) {
 
       char * sequenceNumberString = new char[2];
-      memcpy(sequenceNumberString, &b[0], 1);
+      memcpy(sequenceNumberString, &buffer[0], 1);
       sequenceNumberString[1] = '\0';
 
       char * checksumString = new char[5];
-      memcpy(checksumString, &b[1], 5);
+      memcpy(checksumString, &buffer[1], 5);
       
       char * dataBuffer = new char[BUFFSIZE + 1];
-      memcpy(dataBuffer, &b[2], BUFFSIZE);
+      memcpy(dataBuffer, &buffer[2], BUFFSIZE);
       dataBuffer[BUFFSIZE] = '\0';
 
       cout << "Sequence number: " << sequenceNumberString << endl;
