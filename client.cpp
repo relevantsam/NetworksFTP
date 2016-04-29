@@ -13,7 +13,7 @@
 
 #define USAGE "Usage Error. Expected usage: <Program Name> <Server IP Address> <File Name> <Packet Delay>"
 #define BUFFSIZE 505
-#define PORT 10070
+#define PORT 10073
 #define PAKSIZE 512
 #define ACK 0
 #define NAK 1
@@ -91,17 +91,17 @@ bool init(int argc, char** argv) {
   memset((char *)&client, 0, sizeof(client));
   client.sin_family = AF_INET;
   client.sin_addr.s_addr = htonl(INADDR_ANY);
-  client.sin_port = htons(0);
-
-  if (bind(sock, (struct sockaddr *)&client, sizeof(client)) < 0){
-    cout << "Socket binding failed. (socket s, address a)" << endl;
-    return false;
-  }
+  client.sin_port = htons(10070);
 
   memset((char *)&server, 0, sizeof(server));
   server.sin_family = AF_INET;
   server.sin_port = htons(port);
   inet_pton(AF_INET, hs.c_str(), &(server.sin_addr));
+
+  if (bind(sock, (struct sockaddr *)&client, sizeof(client)) < 0){
+    cout << "Socket binding failed. (socket s, address a)" << endl;
+    return false;
+  }
 
   cout << endl;
 
@@ -210,10 +210,11 @@ bool getFile(string fn){
   int ack;
   
   for (;;) {
+    cout << "test3" << endl;
     unsigned char packet[PAKSIZE + 1];
     unsigned char packetData[BUFFSIZE];
     rlen = recvfrom(sock, packet, PAKSIZE + 1, 0, (struct sockaddr *)&server, &server_length);
-
+    cout << "test4" << endl;
 	if(packet[0] == '\0') break;
 
 	for(int i = 0; i < BUFFSIZE; i++) {
