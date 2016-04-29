@@ -43,13 +43,15 @@
  	byte buf[BUFFSIZE];
 	ifstream file;
 
+	struct packet packetBuffer[16] = NULL;
+
 	struct timeval stTimeOut;
 
 	fd_set stReadFDS;
 
 	//set timeout for 20ms
 	stTimeOut.tv_sec = 0;
-	stTimeOut.tv_usec = 20000;
+	stTimeOut.tv_usec = 15000;
 
 	sock = initSocket();
 	if(sock < 0) return 0;
@@ -106,11 +108,15 @@
  	} else {
  		cout << "Opened " << fileName << endl;
  	}
- 	bool seq = false; // sequence is binary, 0 / 1, false / true
+ 	int seq = 0; // sequence is integer; need to add current sequence check.....
  	while(!file.eof()) {
-		// Init our packet
-		struct packet message;
-		message.h.sequence = seq;
+		// Init packet buffer
+		if(packetBuffer[15] == NULL)
+		{
+			initPacketBuffer(&file, &packetBuffer, &seq);
+		}
+
+		/*message.h.sequence = seq % 32;
 		file.read((char *)message.data, BUFFSIZE - 1);
  		//message.data[BUFFSIZE] = '\0';
 		message.h.checksum = checksumCal(message.data);
@@ -122,9 +128,12 @@
 
 		cout << "Packet Checksum: " << message.h.checksum << endl;
 
-		cout << message.data << endl;
+		cout << message.data << endl;*/
 
-		sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
+		sendPacketWindow(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
+
+		//Modify to sendPacketWindow(message, sock, (struct sockaddr *)&client, sizeof(client, pD, pL, currseq, windowMax);
+		//Add packet buffer perhaps
 
  		// Wait for ACK/NACK
 		int t = select(-1, &stReadFDS, 0, 0, &stTimeOut);
@@ -133,15 +142,18 @@
 			p = recvfrom(sock, buf, PACKETSIZE, 0, (struct sockaddr *)&client, &client_len);
 			buf[p] = '\0';
 			char * ACKmsg = strtok((char *)buf, " ");
+			//acknum = something figure it out
 			string ACKword = ACKmsg;
-			if(ACKword == "ACK")
+			if(ACKword == "ACK" && ACKnum == currseq + 1)
 			{
-				cout << "sequence " << message.h.sequence << " ACK\n";
+				cout << "sequence " << message.h.sequence << " ACK\n"; //packet accepted, in order, slide window forward
+				//currseq++
+				shiftCongestionWindow(file, packetBuffer, seq)
 			}
 
 			else if(ACKword == "NACK")
 			{
-				cout << "sequence " << message.h.sequence << " NACK\n";
+				cout << "sequence " << message.h.sequence << " NACK\n"; \\Corrupted packet, resend window
 				cout << "resending...\n";
 				sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
 			}
@@ -149,13 +161,13 @@
 		}
 		else if(t == 0)
 		{
-			cout << "sequence " << message.h.sequence << " timeout\n";
+			cout << "sequence " << message.h.sequence << " timeout\n"; \\timeout resend window
 			cout << "resending...\n";
 			sendPacket(message, sock, (struct sockaddr *)&client, sizeof(client), pD, pL);
 		}
 
  		for(int i = 0; i < BUFFSIZE; i++) message.data[i] = '\0'; // Empty the buffer. 
- 		seq = !seq;
+ 		seq = seq + 1;
  	}
  	sendto(sock, "\0", 1, 0, (struct sockaddr *)&client, sizeof(client));
 	file.close();
@@ -219,25 +231,26 @@ int checksumCal(byte packet[]) {
 	return checksum;
 }
 
-void sendPacket(packet message, int socket, struct sockaddr * client, int size, int pD, int pL) {
-	const char * seq = "SEQ:0";
-	stringstream strs;
- 	strs << message.h.checksum;
-  	string temp_str = strs.str();
-	char  const* checksum = temp_str.c_str();
-	if(message.h.sequence) seq = "SEQ:1";
-	char message_str[PACKETSIZE + 1];
-	strcpy(message_str, seq);
-	strcat(message_str, "CHECKSUM:");
-	strcat(message_str, checksum);
-	strcat(message_str, "DATA:");
-	strcat(message_str, (char *)message.data);
-	message_str[PACKETSIZE] = '\0';
-
-	if(gremlin(message, pD, pL))
+void sendPacketWindow(packet[] packetBuffer, int socket, struct sockaddr * client, int size, int pD, int pL) {
+	for(int i = 0; i < 16; i++)
 	{
-		sendto(socket, message_str, PACKETSIZE+1, 0, client, size); // Send the packet
-	}
+		const char * seq = strcat("SEQ: ", packetBuffer[i].h.sequence);
+		stringstream strs;
+ 		strs << message.h.checksum;
+  		string temp_str = strs.str();
+		char  const* checksum = temp_str.c_str();
+		char message_str[PACKETSIZE + 1];
+		strcpy(message_str, seq);
+		strcat(message_str, "CHECKSUM:");
+		strcat(message_str, checksum);
+		strcat(message_str, "DATA:");
+		strcat(message_str, (char *)message.data);
+		message_str[PACKETSIZE] = '\0';
+
+		if(gremlin(message, pD, pL))
+		{
+			sendto(socket, message_str, PACKETSIZE+1, 0, client, size); // Send the packet
+		}
 }
 
  void closeSocket(int sd) {
@@ -290,3 +303,34 @@ bool gremlin(packet &message, int pD, int pL)
 
 	return true;
 }
+
+void initPacketBuffer(ifstream &file, packet &packetBuffer[])
+{
+	struct packet message;
+	for(int i = 0; i < 16; i++)
+	{
+		message.h.sequence = i;
+		file.read((char *)message.data, BUFFSIZE - 1);
+		message.h.checksum = checksumCal(message.data);
+
+		packetbuffer[i] = message;
+	}
+}
+
+void shiftCongestionWindow(ifstream &file, packet &packetBuffer[], int &seq)
+{
+	struct packet message;
+
+	for(int i = 0; i < 15; i++)
+	{
+		packetBuffer[i] = packetBuffer[i + 1];
+	}
+
+	seq = seq + 1;
+
+	message.h.sequence = seq % 32;
+	file.read((char *) message.data, BUFFSIZE - 1);
+	message.h.checksum = checksumCal(message.data);
+
+	packetBuffer[15] = message;
+}	
