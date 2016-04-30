@@ -180,9 +180,9 @@ bool isvpack(unsigned char * p) {
   memcpy(checksumString, &p[2], 5);
   checksumString[5] = '\0';
       
-  char * dataBuffer = new char[BUFFSIZE + 1];
-  memcpy(dataBuffer, &p[8], BUFFSIZE);
-  dataBuffer[BUFFSIZE] = '\0';
+  char * dataBuffer = new char[PAKSIZE + 1];
+  memcpy(dataBuffer, &p[8], PAKSIZE);
+  dataBuffer[PAKSIZE] = '\0';
 
   int sn = boost::lexical_cast<int>(sequenceNumberString);
   int cs = boost::lexical_cast<int>(checksumString);
@@ -193,7 +193,8 @@ bool isvpack(unsigned char * p) {
 
 
   if(!(sn >= (base % 32) && sn <= (base % 32) + WINDOW_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
-  if(cs != pk.generateCheckSum()) { cout << "Bad checksum." << endl; return false; }
+  int chcksumGn = pk.generateCheckSum();
+  if(cs != chcksumGn) { cout << "Bad checksum. Expected: " << cs << " Generated: " << chcksumGn << endl; return false; }
   return true;
 }
 
@@ -210,16 +211,16 @@ bool getFile(string fn){
   int ack;
   
   for (;;) {
-    unsigned char packet[PAKSIZE + 1];
-    unsigned char packetData[BUFFSIZE];
-    rlen = recvfrom(sock, packet, PAKSIZE + 1, 0, (struct sockaddr *)&server, &server_length);
+    unsigned char packet[PAKSIZE + 8];
+    unsigned char packetData[PAKSIZE];
+    rlen = recvfrom(sock, packet, PAKSIZE + 8, 0, (struct sockaddr *)&server, &server_length);
     cout << "RECEIPT OF DATA" << endl;
 	if(packet[0] == '\0') break;
 
-	for(int i = 0; i < BUFFSIZE; i++) {
+	for(int i = 0; i < PAKSIZE; i++) {
       packetData[i] = packet[i + 8];
     }
-	packetData[BUFFSIZE] = '\0';
+	packetData[PAKSIZE] = '\0';
     if (rlen > 0) {
 	  char * sequenceNumberString = new char[3];
 	  memcpy(sequenceNumberString, &packet[0], 3);

@@ -131,10 +131,6 @@ string getGet(){
     client_length = sizeof(client);
 
  		n = recvfrom(sock, buffer, PACKETSIZE, 0, (struct sockaddr *)&client, &client_length);
-    /*if(sendto(sock, "1", 1, 0, (struct sockaddr *)&client, client_length) < 0) {
-      perror("Sending package error");
-      exit(0);
-    }*/
  		buffer[n] = '\0';
  		char * msg = strtok((char *)buffer, " ");
 		string word = msg;
@@ -209,8 +205,8 @@ bool loadFile(string fileName) {
 void loadWindow(){
   cout << "CREATING WINDOW FROM " << base << " TO " << base + WINDOW_SIZE << endl;
 	for(int i = base; i < base + WINDOW_SIZE; i++) {
-		window[i-base] = createPacket(i);
-		if(strlen(window[i-base].getDataBuffer()) < BUFFSIZE && window[i-base].chksm()) { 
+		window[i-base] = createPacket(i); // 0 - 15
+		if(strlen(window[i-base].getDataBuffer()) < PACKETSIZE && window[i-base].chksm()) { 
 			for(++i; i < base + WINDOW_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
@@ -236,7 +232,8 @@ bool sendFile() {
 	
 	int max_sd;
 	bool hasRead = false;
-	while(base * BUFFSIZE < length) {
+	while(base * BUFFSIZE < length) { // While current base of the window times the BUFFSIZE is less than the length of the file
+    // IE Base = 1 
 		int final = 0;
 		loadWindow();
 		
@@ -290,10 +287,10 @@ bool sendFile() {
 }
 
 Packet createPacket(int index){
-    string message = fstring.substr(index * BUFFSIZE, BUFFSIZE);
+    string message = fstring.substr(index * PACKETSIZE, PACKETSIZE);
 
-	if(message.length() < BUFFSIZE) {
-		message[length - (index * BUFFSIZE)] = '\0';
+	if(message.length() < PACKETSIZE) {
+		message[length - (index * PACKETSIZE)] = '\0';
     }
 
     return Packet (index, message.c_str());
