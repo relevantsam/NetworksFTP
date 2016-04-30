@@ -14,7 +14,7 @@
 #define USAGE "Usage Error. Expected usage: <Program Name> <Server IP Address> <File Name> <Packet Delay>"
 #define BUFFSIZE 505
 #define PORT 10070
-#define PAKSIZE 512
+#define PAKSIZE 256
 #define ACK 0
 #define NAK 1
 #define WINDOW_SIZE 16
