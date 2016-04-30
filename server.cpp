@@ -297,10 +297,10 @@ Packet createPacket(int index){
     }
 
     return Packet (index, message.c_str());
-}
+} 
 
 bool sendPacket(){
-	cout << endl << "=========================" << endl << "BEGIN PACKET SEND" << endl << "=====================" << endl;
+	cout << endl << "=========================" << endl << "BEGIN PACKET SEND" << endl << "=========================" << endl;
 	bool* pckStatus = gremlin(&packet, pC, pL, pD);
 
 	dropPacket = pckStatus[0];
@@ -309,7 +309,8 @@ bool sendPacket(){
 	if (dropPacket == true) return false;
 	if (delayPacket == true) packet.setAckNack(1);
     const char * pack = (const char *)packet.str();
-    if(sendto(sock, pack, sizeof(pack), 0, (struct sockaddr *)&client, client_length) < 0) {
+    cout << "Packet: " << pack << endl;
+    if(sendto(sock, pack, PACKETSIZE + 8, 0, (struct sockaddr *)&client, client_length) < 0) {
       perror("Sending package error");
 		  return false;
     }
