@@ -277,6 +277,7 @@ bool sendFile() {
 			}
 		
 		}
+
 	}
   struct sockaddr* clientAddr = (struct sockaddr*)&client;
 	if(sendto(sock, "\0", BUFFSIZE, 0, clientAddr, client_length) < 0) {
@@ -290,7 +291,7 @@ Packet createPacket(int index){
     string message = fstring.substr(index * PACKETSIZE, PACKETSIZE);
 
 	if(message.length() < PACKETSIZE) {
-		message[length - (index * PACKETSIZE)] = '\0';
+		message[length - index * PACKETSIZE] = '\0';
     }
 
     return Packet (index, message.c_str());

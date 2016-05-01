@@ -189,10 +189,10 @@ bool isvpack(unsigned char * p) {
 
   Packet pk (0, dataBuffer);
   pk.setSequenceNum(sn);
+  cout << sn << endl;
 
 
-
-  if(!(sn >= (base % 32) && sn <= (base % 32) + WINDOW_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
+  if(!(sn >= (base % 32) || sn <= (base % 32) + WINDOW_SIZE - 1)) { cout << "Bad sequence number. " << base % 32 << " " << ((base % 32) + WINDOW_SIZE - 1) % 32 << endl; return false; }
   int chcksumGn = pk.generateCheckSum();
   if(cs != chcksumGn) { cout << "Bad checksum. Expected: " << cs << " Generated: " << chcksumGn << endl; return false; }
   return true;
@@ -221,6 +221,7 @@ bool getFile(string fn){
       packetData[i] = packet[i + 8];
     }
 	packetData[PAKSIZE] = '\0';
+	packet[PAKSIZE + 8] = '\0';
     if (rlen > 0) {
 	  char * sequenceNumberString = new char[3];
 	  memcpy(sequenceNumberString, &packet[0], 3);
