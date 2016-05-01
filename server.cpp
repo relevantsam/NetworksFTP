@@ -85,7 +85,7 @@ bool init(int argc, char** argv){
 
   /* Create our socket. */
   if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-    cout << "Socket creation failed. (socket sock)" << endl;
+    cout << "Socket creation failed." << endl;
     return 0;
   }
 
@@ -103,15 +103,14 @@ bool init(int argc, char** argv){
   }
  
   fileName = getGet();
-  cout << "test1" << endl;
 
   if (!loadFile(fileName)) {
-    cout << "Loading file failed. (filename FILENAME)" << endl;
+    cout << "Loading file failed. (filename " << fileName << ")" << endl;
     return false;
   }
-  cout << "test2" << endl;
   fstring = string(file);
-  cout << "File: " << endl << fstring << endl;
+
+  //cout << "====================================" << endl << endl << "File preview: " << endl << fstring << endl << endl << "====================================" << endl << endl ;
 
   base = 0;
   dropPacket = false;
@@ -122,18 +121,24 @@ bool init(int argc, char** argv){
 }
 
 string getGet(){
+
+  fd_set stReadFDS;
 	string fileName;
 	int n;
  	for(;;) {
+    cout << "WAITING FOR FILE REQUEST" << endl;
+    malloc(sizeof(client));
+    client_length = sizeof(client);
+
  		n = recvfrom(sock, buffer, PACKETSIZE, 0, (struct sockaddr *)&client, &client_length);
  		buffer[n] = '\0';
  		char * msg = strtok((char *)buffer, " ");
 		string word = msg;
 		if(word == "GET") {
-			cout << "GET REQUEST RECEIVED" << endl;
+			cout << "GET REQUEST RECEIVED" << endl << endl;
  			msg = strtok(NULL, " ");
  			fileName = msg;
- 			cout << "Request for " << fileName << endl;
+ 			cout << "Request for " << fileName << endl << endl;
  			break;
 		} else {
 			cout << "Request rejected." << endl;
@@ -144,7 +149,7 @@ string getGet(){
 }
 
 bool isvpack(unsigned char * p) {
-  cout << endl << "=== IS VALID PACKET === " << endl;
+  cout << endl << "Packet is valid " << endl;
 
   char * sequenceNumberString = new char[2];
   memcpy(sequenceNumberString, &p[0], 1);
@@ -198,9 +203,10 @@ bool loadFile(string fileName) {
 }
 
 void loadWindow(){
+  cout << "CREATING WINDOW FROM " << base << " TO " << base + WINDOW_SIZE << endl;
 	for(int i = base; i < base + WINDOW_SIZE; i++) {
-		window[i-base] = createPacket(i);
-		if(strlen(window[i-base].getDataBuffer()) < BUFFSIZE && window[i-base].chksm()) { 
+		window[i-base] = createPacket(i); // 0 - 15
+		if(strlen(window[i-base].getDataBuffer()) < PACKETSIZE && window[i-base].chksm()) { 
 			for(++i; i < base + WINDOW_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
 			}
@@ -226,7 +232,8 @@ bool sendFile() {
 	
 	int max_sd;
 	bool hasRead = false;
-	while(base * BUFFSIZE < length) {
+	while(base * BUFFSIZE < length) { // While current base of the window times the BUFFSIZE is less than the length of the file
+    // IE Base = 1 
 		int final = 0;
 		loadWindow();
 		
@@ -246,7 +253,7 @@ bool sendFile() {
 				perror("select()");
 			}
 			if (t == 0) {
-				cout << "=== ACK TIMEOUT (select) ===" << endl;
+				cout << "ACK Timed out" << endl;
 				cout << "Timed out packet: " << base << endl;
 				break;
 			} 
@@ -255,8 +262,9 @@ bool sendFile() {
 				if(final + fd_ready < WINDOW_SIZE){
 					if(final++ == WINDOW_SIZE - 2) break;
 				}
+        client_length = sizeof(client);
 				if(recvfrom(sock, buffer, BUFFSIZE + 7, 0, (struct sockaddr *)&client, &client_length) < 0) {
-					cout << "=== ACK TIMEOUT (recvfrom) ===" << endl;
+					cout << "ACK Timed out" << endl;
 				} else hasRead = true;
 				if(!hasRead) continue;
 				if(isAck()) {
@@ -270,7 +278,8 @@ bool sendFile() {
 		
 		}
 	}
-	if(sendto(sock, "\0", BUFFSIZE, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
+  struct sockaddr* clientAddr = (struct sockaddr*)&client;
+	if(sendto(sock, "\0", BUFFSIZE, 0, clientAddr, client_length) < 0) {
 		cout << "Final package sending failed. (socket sock, server address sa, message m)" << endl;
 		return false;
 	}
@@ -278,18 +287,17 @@ bool sendFile() {
 }
 
 Packet createPacket(int index){
-    string message = fstring.substr(index * BUFFSIZE, BUFFSIZE);
+    string message = fstring.substr(index * PACKETSIZE, PACKETSIZE);
 
-	if(message.length() < BUFFSIZE) {
-		message[length - (index * BUFFSIZE)] = '\0';
+	if(message.length() < PACKETSIZE) {
+		message[length - (index * PACKETSIZE)] = '\0';
     }
 
     return Packet (index, message.c_str());
-}
+} 
 
 bool sendPacket(){
-	cout << endl;
-    cout << "=== TRANSMISSION START ===" << endl;
+	cout << endl << "=========================" << endl << "BEGIN PACKET SEND" << endl << "=========================" << endl;
 	bool* pckStatus = gremlin(&packet, pC, pL, pD);
 
 	dropPacket = pckStatus[0];
@@ -297,15 +305,16 @@ bool sendPacket(){
 
 	if (dropPacket == true) return false;
 	if (delayPacket == true) packet.setAckNack(1);
-
-    if(sendto(sock, packet.str(), PACKETSIZE + 1, 0, (struct sockaddr *)&client, sizeof(client)) < 0) {
-		cout << "Package sending failed. (socket sock, server address sa, message m)" << endl;
-		return false;
+    const char * pack = (const char *)packet.str();
+    cout << "Packet: " << pack << endl;
+    if(sendto(sock, pack, PACKETSIZE + 8, 0, (struct sockaddr *)&client, client_length) < 0) {
+      perror("Sending package error");
+		  return false;
     }
     return true;
 }
 bool isAck() {
-    cout << endl << "=== SERVER RESPONSE ===" << endl;
+    cout << endl << "Responding" << endl;
     cout << "Data: " << buffer << endl;
     if(buffer[6] == '\0') return true;
     else return false;
@@ -313,7 +322,7 @@ bool isAck() {
 void handleAck() {
 	int ack = boost::lexical_cast<int>(buffer);
 	if(base < ack) base = ack;
-	cout << "Window base: " << base << endl;
+	cout << "Window: " << base << endl;
 }
 void handleNak(int& x) {
 
@@ -348,14 +357,11 @@ bool* gremlin(Packet * pack, int pC, int pL, int pD){
 
   if(r <= (pL)){
 	packStatus[0] = true;
-    cout << "Dropped!" << endl;
   }
   else if(r <= (pD)){
 	  packStatus[1] = true;
-	  cout << "Delayed!" << endl;
   }
   else if(r <= (pC)){
-    cout << "Corrupted!" << endl;
     pack->loadDataBuffer((char*)"GREMLIN");
   }
 

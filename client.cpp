@@ -13,8 +13,8 @@
 
 #define USAGE "Usage Error. Expected usage: <Program Name> <Server IP Address> <File Name> <Packet Delay>"
 #define BUFFSIZE 505
-#define PORT 10073
-#define PAKSIZE 512
+#define PORT 10070
+#define PAKSIZE 256
 #define ACK 0
 #define NAK 1
 #define WINDOW_SIZE 16
@@ -32,7 +32,7 @@ void handleAck();
 void handleNak(int& x);
 int sequenceNum;
 string hs;
-short int port;
+short int srv_port;
 char * file;
 unsigned char* window[16]; //packet window
 int base; //used to determine position in window of arriving packets
@@ -78,7 +78,7 @@ bool init(int argc, char** argv) {
   sock = 0;
 
   hs = argv[1]; 
-  port = PORT; 
+  srv_port = 10073; 
 
   delayT = atoi(argv[3]);
 
@@ -91,11 +91,11 @@ bool init(int argc, char** argv) {
   memset((char *)&client, 0, sizeof(client));
   client.sin_family = AF_INET;
   client.sin_addr.s_addr = htonl(INADDR_ANY);
-  client.sin_port = htons(10070);
+  client.sin_port = htons(PORT);
 
   memset((char *)&server, 0, sizeof(server));
   server.sin_family = AF_INET;
-  server.sin_port = htons(port);
+  server.sin_port = htons(srv_port);
   inet_pton(AF_INET, hs.c_str(), &(server.sin_addr));
 
   if (bind(sock, (struct sockaddr *)&client, sizeof(client)) < 0){
@@ -180,9 +180,9 @@ bool isvpack(unsigned char * p) {
   memcpy(checksumString, &p[2], 5);
   checksumString[5] = '\0';
       
-  char * dataBuffer = new char[BUFFSIZE + 1];
-  memcpy(dataBuffer, &p[8], BUFFSIZE);
-  dataBuffer[BUFFSIZE] = '\0';
+  char * dataBuffer = new char[PAKSIZE + 1];
+  memcpy(dataBuffer, &p[8], PAKSIZE);
+  dataBuffer[PAKSIZE] = '\0';
 
   int sn = boost::lexical_cast<int>(sequenceNumberString);
   int cs = boost::lexical_cast<int>(checksumString);
@@ -193,13 +193,14 @@ bool isvpack(unsigned char * p) {
 
 
   if(!(sn >= (base % 32) && sn <= (base % 32) + WINDOW_SIZE - 1)) { cout << "Bad sequence number." << endl; return false; }
-  if(cs != pk.generateCheckSum()) { cout << "Bad checksum." << endl; return false; }
+  int chcksumGn = pk.generateCheckSum();
+  if(cs != chcksumGn) { cout << "Bad checksum. Expected: " << cs << " Generated: " << chcksumGn << endl; return false; }
   return true;
 }
 
 
 bool getFile(string fn){
-  /* Loop forever, waiting for messages from a client. */
+  /* Loop forever, waiting for messages from a server. */
   cout << "Waiting on port " << PORT << "..." << endl;
 
   ofstream file;
@@ -210,17 +211,16 @@ bool getFile(string fn){
   int ack;
   
   for (;;) {
-    cout << "test3" << endl;
-    unsigned char packet[PAKSIZE + 1];
-    unsigned char packetData[BUFFSIZE];
-    rlen = recvfrom(sock, packet, PAKSIZE + 1, 0, (struct sockaddr *)&server, &server_length);
-    cout << "test4" << endl;
+    unsigned char packet[PAKSIZE + 8];
+    unsigned char packetData[PAKSIZE];
+    rlen = recvfrom(sock, packet, PAKSIZE + 8, 0, (struct sockaddr *)&server, &server_length);
+    cout << "RECEIPT OF DATA" << endl;
 	if(packet[0] == '\0') break;
 
-	for(int i = 0; i < BUFFSIZE; i++) {
+	for(int i = 0; i < PAKSIZE; i++) {
       packetData[i] = packet[i + 8];
     }
-	packetData[BUFFSIZE] = '\0';
+	packetData[PAKSIZE] = '\0';
     if (rlen > 0) {
 	  char * sequenceNumberString = new char[3];
 	  memcpy(sequenceNumberString, &packet[0], 3);
@@ -229,7 +229,8 @@ bool getFile(string fn){
       char * checksumString = new char[6];
       memcpy(checksumString, &packet[2], 5);
       checksumString[5] = '\0';
-      cout << endl << endl << "=== RECEIPT" << endl;
+      cout << endl << endl << "DATA" << endl;
+      cout << "Packet: " << packet << endl;
       cout << "Seq. num: " << sequenceNumberString << endl;
       cout << "Checksum: " << checksumString << endl;
 	  cout << "Payload: " << packetData << endl;
@@ -240,7 +241,7 @@ bool getFile(string fn){
 			file << packetData;
 			file.flush();
 		}
-      } else cout << "%%% ERROR IN PACKET " << pid << "%%%" << endl;
+      } else cout << "ERR " << pid << endl;
 
       cout << "Sent response: ";
       cout << "ACK " << base << endl;
