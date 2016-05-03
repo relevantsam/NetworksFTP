@@ -23,13 +23,8 @@ using namespace std;
 
 bool init(int argc, char** argv);
 bool getFile(string fn);
-char * recvPkt();
+//char * recvPkt();
 bool isvpack(unsigned char * p);
-Packet createPacket(int index);
-bool sendPacket();
-bool isAck();
-void handleAck();
-void handleNak(int& x);
 int sequenceNum;
 string hs;
 short int srv_port;
@@ -49,24 +44,28 @@ unsigned char b[BUFFSIZE];
 string fn;
 
 int main(int argc, char** argv) {
- 
+  // Check the usage
   if (argc != 4) {
     cout << USAGE << endl;
     return false;
 
   }
- 
+  
+  // Get the file name
   fn = argv[2];
+  // Initialize using the args
   if(!init(argc, argv)) return -1;
 
   string message = "GET " + fn;
   cout << message << endl;
  
-  if(sendto(sock, message.c_str(), BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
+  // Send GET request
+  if(sendto(sock, message.c_str(), PAKSIZE, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
     cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
     return false;
   }
   
+  // Run the Get File method
   getFile(fn);
 
   return 0;
@@ -74,30 +73,31 @@ int main(int argc, char** argv) {
 
  /*Intitialize base*/
 bool init(int argc, char** argv) {
-  base = 0;
-  sock = 0;
+  base = 0; // Start with packet 0
+  sock = 0; // initialize our socket
 
   hs = argv[1]; 
-  srv_port = 10073; 
+  srv_port = 10073; // Target port
 
-  delayT = atoi(argv[3]);
+  delayT = atoi(argv[3]); // Get our delay value
 
-
+  // Init socket
   if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
     cout << "Socket creation failed. (socket s)" << endl;
     return false;
   }
 
-  memset((char *)&client, 0, sizeof(client));
+  memset((char *)&client, 0, sizeof(client)); // Secure memory for the client
   client.sin_family = AF_INET;
   client.sin_addr.s_addr = htonl(INADDR_ANY);
   client.sin_port = htons(PORT);
 
-  memset((char *)&server, 0, sizeof(server));
+  memset((char *)&server, 0, sizeof(server)); // Secure memory for the server
   server.sin_family = AF_INET;
   server.sin_port = htons(srv_port);
   inet_pton(AF_INET, hs.c_str(), &(server.sin_addr));
 
+  // Bind socket for the client
   if (bind(sock, (struct sockaddr *)&client, sizeof(client)) < 0){
     cout << "Socket binding failed. (socket s, address a)" << endl;
     return false;
@@ -116,62 +116,9 @@ bool init(int argc, char** argv) {
   return true;
 }
 
+bool isvpack(unsigned char * p) { // validate a raw packet
 
-
-Packet createPacket(int index){
-    cout << endl;
-    cout << "=== TRANSMISSION START ===" << endl;
-    string mstr = fstr.substr(index * BUFFSIZE, BUFFSIZE);
-    if(index * BUFFSIZE + BUFFSIZE > length) {
-      mstr[length - (index * BUFFSIZE)] = '\0';
-    }
-    return Packet (sequenceNum, mstr.c_str());
-}
-
-bool sendPacket(){
-    if(sendto(sock, packet.str(), BUFFSIZE + 7, 0, (struct sockaddr *)&server, sizeof(server)) < 0) {
-      cout << "Package sending failed. (socket s, server address sa, message m)" << endl;
-      return false;
-    }
-    else return true;
-}
-bool isAck() {
-    recvfrom(sock, b, BUFFSIZE + 7, 0, (struct sockaddr *)&server, &server_length);
-
-    cout << endl << "=== RESPONSE ===" << endl;
-    cout << "Data: " << b << endl;
-    if(b[6] == '0') return true;
-    else return false;
-}
-void handleAck() {
-
-}
-void handleNak(int& x) {
-
-      char * sequenceNumberString = new char[2];
-      memcpy(sequenceNumberString, &b[0], 1);
-      sequenceNumberString[1] = '\0';
-
-      char * checksumString = new char[5];
-      memcpy(checksumString, &b[1], 5);
-      
-      char * dataBuffer = new char[BUFFSIZE + 1];
-      memcpy(dataBuffer, &b[2], BUFFSIZE);
-      dataBuffer[BUFFSIZE] = '\0';
-
-      cout << "Sequence number: " << sequenceNumberString << endl;
-      cout << "Checksum: " << checksumString << endl;
-
-      Packet pk (0, dataBuffer);
-      pk.setSequenceNum(boost::lexical_cast<int>(sequenceNumberString));
-      pk.setCheckSum(boost::lexical_cast<int>(checksumString));
-
-      if(!pk.chksm()) x--; 
-      else x = (x - 2 > 0) ? x - 2 : 0;
-}
-
-bool isvpack(unsigned char * p) {
-
+  // Build packet into strings
   char * sequenceNumberString = new char[3];
   memcpy(sequenceNumberString, &p[0], 3);
   sequenceNumberString[2] = '\0';
@@ -184,16 +131,18 @@ bool isvpack(unsigned char * p) {
   memcpy(dataBuffer, &p[8], PAKSIZE);
   dataBuffer[PAKSIZE] = '\0';
 
+  // Convert these stings to ints
   int sn = boost::lexical_cast<int>(sequenceNumberString);
   int cs = boost::lexical_cast<int>(checksumString);
 
-  Packet pk (0, dataBuffer);
-  pk.setSequenceNum(sn);
-  cout << sn << endl;
+  // Validate SN
+  if(sn < (base % 32) && sn > (base % 32) + WINDOW_SIZE - 1) { cout << "Bad sequence number. " << base % 32 << " " << ((base % 32) + WINDOW_SIZE - 1) % 32 << endl; return false; }
+  // if SN is less than the current base mod 32 AND sn is bigger than the base mod 32 + 256 - 1 (EX. 11+31 - SN is out of range)
+  // Generate a package with sequence #
+  Packet pk (sn, dataBuffer);
 
-
-  if(!(sn >= (base % 32) || sn <= (base % 32) + WINDOW_SIZE - 1)) { cout << "Bad sequence number. " << base % 32 << " " << ((base % 32) + WINDOW_SIZE - 1) % 32 << endl; return false; }
-  int chcksumGn = pk.generateCheckSum();
+  int chcksumGn = pk.generateCheckSum();  // Calculate the checksum for the package
+  // Validate
   if(cs != chcksumGn) { cout << "Bad checksum. Expected: " << cs << " Generated: " << chcksumGn << endl; return false; }
   return true;
 }
@@ -214,51 +163,59 @@ bool getFile(string fn){
     unsigned char packet[PAKSIZE + 8];
     unsigned char packetData[PAKSIZE];
     rlen = recvfrom(sock, packet, PAKSIZE + 8, 0, (struct sockaddr *)&server, &server_length);
-    cout << "RECEIPT OF DATA" << endl;
-	if(packet[0] == '\0') break;
-
-	for(int i = 0; i < PAKSIZE; i++) {
-      packetData[i] = packet[i + 8];
+    cout << endl << endl << "===================" << endl << "RECEIPT OF DATA"  << endl << "===================" << endl;
+    if(packet[0] == '\0') { // At EOF
+      cout << endl << endl << "===================" << endl << "RECEIVED END OF FILE"  << endl << "===================" << endl;
+      break; // Jump to after loop
     }
-	packetData[PAKSIZE] = '\0';
-	packet[PAKSIZE + 8] = '\0';
-    if (rlen > 0) {
-	  char * sequenceNumberString = new char[3];
-	  memcpy(sequenceNumberString, &packet[0], 3);
-	  sequenceNumberString[2] = '\0';
+
+    for(int i = 0; i < PAKSIZE; i++) {
+      packetData[i] = packet[i + 8]; // Copy the data from the packet into the packetData variable with offset for header
+    }
+  	packetData[PAKSIZE] = '\0'; // Null terminate the string for packet data
+  	packet[PAKSIZE + 8] = '\0'; // Terminate the string for the packet to avoid display errors
+    if (rlen > 0) { // rlen indicates a packet received. 
+  	  char * sequenceNumberString = new char[3]; // ##\0
+  	  memcpy(sequenceNumberString, &packet[0], 3); // Copy ## in
+  	  sequenceNumberString[2] = '\0'; // null terminate string to avoid display errors
 		
-      char * checksumString = new char[6];
-      memcpy(checksumString, &packet[2], 5);
-      checksumString[5] = '\0';
-      cout << endl << endl << "DATA" << endl;
-      cout << "Packet: " << packet << endl;
-      cout << "Seq. num: " << sequenceNumberString << endl;
-      cout << "Checksum: " << checksumString << endl;
-	  cout << "Payload: " << packetData << endl;
-	  int pid = boost::lexical_cast<int>(sequenceNumberString);
-      if(isvpack(packet)) {
-		if(pid == base % 32) { 
-			base++; //increment base of window
-			file << packetData;
-			file.flush();
-		}
-      } else cout << "ERR " << pid << endl;
+      char * checksumString = new char[6]; // #####\0
+      memcpy(checksumString, &packet[2], 5); // Copy ######
+      checksumString[5] = '\0'; // null terminate string to avoid display errors
+	    int pid = boost::lexical_cast<int>(sequenceNumberString); // Use Boost to convert the string to an ID.
+      if(isvpack(packet)) { // Validate the package with isvpack 
+    		if(pid == base % 32) {  // If the sequence number is the same as the base mod 32, it's what we wanted
+          /// Print data
+          cout << "Raw Packet: " << packet << endl;
+          cout << "Seq. num: " << sequenceNumberString << endl;
+          cout << "Checksum: " << checksumString << endl;
+          cout << "Payload: " << packetData << endl;
+    			file << packetData; // Write to the file
+    			file.flush(); // Execute
+          base++; //increment base data received to indicate next desired data
+    		} else {
+          cout << "IGNORING UNWANTED DATA (SN " << pid << " does not match desired: " << base % 32 << ")" << endl;
+        }
+      } else cout << "ERR " << pid << endl; // Otherwise, it's a corruption error
 
       cout << "Sent response: ";
       cout << "ACK " << base << endl;
 
-	  if(packet[6] == '1') usleep(delayT*1000);
+  	  if(packet[6] == '1') {
+        usleep(delayT*1000);
+        cout << "============================================" << endl << "DELAYING" << endl << "============================================" << endl;
+      }
 
-	  string wbs = to_string((long long)base);
-	  const char * ackval = wbs.c_str();
+	     string wbs = to_string((long long)base); // String of base
+	     const char * ackval = wbs.c_str(); // C_Str of base
 
+      // Send an ACK to the server
       if(sendto(sock, ackval, 10, 0, (struct sockaddr *)&server, server_length) < 0) {
-        cout << "Acknowledgement failed. (socket s, acknowledgement message ack, client address ca, client address length calen)" << endl;
-		perror("sendto()");
+		    perror("Sending ACK Failed");
         return 0;
       }
-	  delete sequenceNumberString;
-      delete checksumString;
+	    delete sequenceNumberString; // Unset string
+      delete checksumString; // Unset string
     }
   }
   cout << "'GET' file transfer complete." << endl;

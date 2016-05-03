@@ -163,6 +163,7 @@ bool isvpack(unsigned char * p) {
   memcpy(databuffer, &p[2], 121);
   databuffer[121] = '\0';
 
+  cout << "Packet: " << p << endl;
   cout << "Seq. num: " << sequenceNumberString << endl;
   cout << "Checksum: " << checksumString << endl;
   cout << "Message: " << databuffer << endl;
@@ -194,6 +195,8 @@ bool loadFile(string fileName) {
     file = new char[length];
 
     cout << "Reading " << length << " characters..." << endl;
+    cout << "File requires " << length / 256 << " packets" << endl;
+    
     fileStream.read(file, length);
 
     if(!fileStream) { cout << "File reading failed. (filename " << fileName << "). Only " << fileStream.gcount() << " could be read."; return false; }
@@ -205,15 +208,13 @@ bool loadFile(string fileName) {
 void loadWindow(){
   cout << "CREATING WINDOW FROM " << base << " TO " << base + WINDOW_SIZE << endl;
 	for(int i = base; i < base + WINDOW_SIZE; i++) {
-		window[i-base] = createPacket(i); // 0 - 15
+		window[i-base] = createPacket(i); // 0 - 15 
 		if(strlen(window[i-base].getDataBuffer()) < PACKETSIZE && window[i-base].chksm()) { 
 			for(++i; i < base + WINDOW_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
-			}
-			
+			}	
 		}
 	}
-	
 }
 
 bool sendFile() {
@@ -288,18 +289,16 @@ bool sendFile() {
 }
 
 Packet createPacket(int index){
-    string message = fstring.substr(index * PACKETSIZE, PACKETSIZE);
-
-	if(message.length() < PACKETSIZE) {
-		message[length - index * PACKETSIZE] = '\0';
-    }
-
-    return Packet (index, message.c_str());
+  string message = fstring.substr(index * PACKETSIZE, PACKETSIZE); // Create the message 
+	if(message.length() < PACKETSIZE) { // If the message is too small for the buffer
+		message[length - index * PACKETSIZE] = '\0'; // Terminate the message with a null char 
+  }
+  return Packet (index % 32, message.c_str()); // Return the packet. The index is a valid sequence number
 } 
 
 bool sendPacket(){
 	cout << endl << "=========================" << endl << "BEGIN PACKET SEND" << endl << "=========================" << endl;
-	bool* pckStatus = gremlin(&packet, pC, pL, pD);
+	bool* pckStatus = gremlin(&packet, pC, pL, pD); // Tell us if something is going to be messed up
 
 	dropPacket = pckStatus[0];
 	delayPacket = pckStatus[1];
@@ -321,6 +320,7 @@ bool isAck() {
     else return false;
 }
 void handleAck() {
+  cout << "====================" << endl << "RECEIVED ACK" << endl << "===================" << endl;
 	int ack = boost::lexical_cast<int>(buffer);
 	if(base < ack) base = ack;
 	cout << "Window: " << base << endl;
