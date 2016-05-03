@@ -59,26 +59,28 @@ unsigned char buffer[BUFFSIZE];
 int base;
 
 int main(int argc, char** argv) {
-  
+  // Initialize file using args
   if(!init(argc, argv)) return -1;
   
+  // Send the file now
   if(sendFile()) cout << "GET file complete." << endl;
   
   return 0;
 }
 
 bool init(int argc, char** argv){
-
+  // Check args to make sure there are enough
   if(argc != 4) { 
     cout << USAGE << endl;
     return false;
   }
 
+  // Pick up the percent params
   pC = atoi(argv[1]);
   pL = atoi(argv[2]);
   pD = atoi(argv[3]);
 
-
+  // Evaluate what the timeout is (15ms)
   struct timeval timeout;
   timeout.tv_usec = TIMEOUT * 1000;
   timeoutMS = TIMEOUT;
@@ -89,33 +91,35 @@ bool init(int argc, char** argv){
     return 0;
   }
 
+  // Set timeout options
   setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
 
   
-  memset((char *)&server, 0, sizeof(server));
+  memset((char *)&server, 0, sizeof(server)); // Allocate memory for server
   server.sin_family = AF_INET;
   server.sin_addr.s_addr = htonl(INADDR_ANY);
   server.sin_port = htons(PORT);
 
+  // Bind socket for server
   if (bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) {
     cout << "Socket binding failed. (socket sock, address server)" << endl;
     return 0;
   }
- 
+  
+  // Get the file name
   fileName = getGet();
 
+  // Load the file
   if (!loadFile(fileName)) {
     cout << "Loading file failed. (filename " << fileName << ")" << endl;
     return false;
   }
-  fstring = string(file);
+  fstring = string(file); // Stick the file into a string
 
   //cout << "====================================" << endl << endl << "File preview: " << endl << fstring << endl << endl << "====================================" << endl << endl ;
+  // ^ you could echo the file, but at 80kb it's huge.
 
-  base = 0;
-  dropPacket = false;
-  client_length = sizeof(client);
-
+  dropPacket = false; // Don't drop it from the start!
   
   return true;
 }
@@ -126,18 +130,21 @@ string getGet(){
 	string fileName;
 	int n;
  	for(;;) {
+    // Wait to pick up a request for a file
     cout << "WAITING FOR FILE REQUEST" << endl;
-    malloc(sizeof(client));
+    // Allocate memory to store the client in
+    malloc(sizeof(client)); 
     client_length = sizeof(client);
 
  		n = recvfrom(sock, buffer, PACKETSIZE, 0, (struct sockaddr *)&client, &client_length);
- 		buffer[n] = '\0';
- 		char * msg = strtok((char *)buffer, " ");
-		string word = msg;
+
+ 		buffer[n] = '\0'; // Null terminate buffer to prevent display errors
+ 		char * msg = strtok((char *)buffer, " "); // Grab the message
+		string word = msg; // note that the first word should be GET
 		if(word == "GET") {
 			cout << "GET REQUEST RECEIVED" << endl << endl;
- 			msg = strtok(NULL, " ");
- 			fileName = msg;
+ 			msg = strtok(NULL, " "); // Get the first word
+ 			fileName = msg; // Yup, that's the file name
  			cout << "Request for " << fileName << endl << endl;
  			break;
 		} else {
@@ -183,7 +190,7 @@ bool isvpack(unsigned char * p) {
 
 
 bool loadFile(string fileName) {
-
+  // This is basic
   ifstream fileStream;
   fileStream.open(fileName, ifstream::binary);
 
@@ -196,7 +203,7 @@ bool loadFile(string fileName) {
 
     cout << "Reading " << length << " characters..." << endl;
     cout << "File requires " << length / 256 << " packets" << endl;
-    
+
     fileStream.read(file, length);
 
     if(!fileStream) { cout << "File reading failed. (filename " << fileName << "). Only " << fileStream.gcount() << " could be read."; return false; }
@@ -206,13 +213,16 @@ bool loadFile(string fileName) {
 }
 
 void loadWindow(){
-  cout << "CREATING WINDOW FROM " << base << " TO " << base + WINDOW_SIZE << endl;
+  cout << endl << "===============================" << endl << "CREATING WINDOW FROM " << 
+    base << " TO " << base + WINDOW_SIZE - 1 << endl << "===============================" << endl;
 	for(int i = base; i < base + WINDOW_SIZE; i++) {
-		window[i-base] = createPacket(i); // 0 - 15 
+		window[i-base] = createPacket(i); // EX. 0 - 15 
+    // Deal with the last packet
 		if(strlen(window[i-base].getDataBuffer()) < PACKETSIZE && window[i-base].chksm()) { 
 			for(++i; i < base + WINDOW_SIZE; i++){
 				window[i-base].loadDataBuffer("\0");
-			}	
+			}
+      // Should we break here?
 		}
 	}
 }
@@ -222,49 +232,53 @@ bool sendFile() {
 
 	struct timeval stTimeOut;
 
-
+  // Set up the FD options
 	FD_ZERO(&stReadFDS);
 	stTimeOut.tv_sec = 0;
-	stTimeOut.tv_usec = 1000 * TIMEOUT;
-	FD_SET(sock, &stReadFDS);
+	stTimeOut.tv_usec = 1000 * TIMEOUT; // 15ms
+	FD_SET(sock, &stReadFDS); // Set in the socket
 
-	base = 0;
+	base = 0; // Make sure the base is 0
 	int fd_ready;
 	
 	int max_sd;
 	bool hasRead = false;
-	while(base * BUFFSIZE < length) { // While current base of the window times the BUFFSIZE is less than the length of the file
-    // IE Base = 1 
+	while(base * PACKETSIZE < length) { // While current base times the PACKETSIZE is less than the length of the file
+    // Previously, BUFFSIZE but that didn't make sense. 
+    // IE Base = 1 (1*256 is < length of the file)
 		int final = 0;
-		loadWindow();
+		loadWindow(); // Load up the window in above function
 		
-		if(packet.str()[0] == '\0') final = packet.getSequenceNum();
 		for(int i = 0; i < WINDOW_SIZE; i++) {
-			packet = window[i];
-			if(!sendPacket()) continue;
+			packet = window[i]; // Select a packet
+      if(packet.str()[0] == '\0') final = packet.getSequenceNum(); // If it's the final packet, get its sequence number
+			if(!sendPacket()) continue; // if it doesn't send, go to the next iteration
 		}
-		while(final < WINDOW_SIZE - 1) {
+		while(final < WINDOW_SIZE - 1) { // When the last one in the window
+      // Set the settings again.
 			FD_ZERO(&stReadFDS);
 			stTimeOut.tv_sec = 0;
 			stTimeOut.tv_usec = 1000 * TIMEOUT;
 			FD_SET(sock, &stReadFDS);
 
+      // We're about to listen
 			int t = select(sock + 1, &stReadFDS, NULL, NULL, &stTimeOut);
 			if (t == -1){
-				perror("select()");
+				perror("select() err");
 			}
 			if (t == 0) {
 				cout << "ACK Timed out" << endl;
 				cout << "Timed out packet: " << base << endl;
 				break;
 			} 
+      // We have a live one
 			fd_ready = t;
 			for(int u = 0; u <= sock &&  fd_ready > 0; u++){
 				if(final + fd_ready < WINDOW_SIZE){
 					if(final++ == WINDOW_SIZE - 2) break;
 				}
         client_length = sizeof(client);
-				if(recvfrom(sock, buffer, BUFFSIZE + 7, 0, (struct sockaddr *)&client, &client_length) < 0) {
+				if(recvfrom(sock, buffer, PACKETSIZE, 0, (struct sockaddr *)&client, &client_length) < 0) {
 					cout << "ACK Timed out" << endl;
 				} else hasRead = true;
 				if(!hasRead) continue;
@@ -280,8 +294,9 @@ bool sendFile() {
 		}
 
 	}
+  // Need to add sending the second to last package here
   struct sockaddr* clientAddr = (struct sockaddr*)&client;
-	if(sendto(sock, "\0", BUFFSIZE, 0, clientAddr, client_length) < 0) {
+	if(sendto(sock, "\0", PACKETSIZE, 0, clientAddr, client_length) < 0) {
 		cout << "Final package sending failed. (socket sock, server address sa, message m)" << endl;
 		return false;
 	}
@@ -303,18 +318,18 @@ bool sendPacket(){
 	dropPacket = pckStatus[0];
 	delayPacket = pckStatus[1];
 
-	if (dropPacket == true) return false;
-	if (delayPacket == true) packet.setAckNack(1);
-    const char * pack = (const char *)packet.str();
-    cout << "Packet: " << pack << endl;
-    if(sendto(sock, pack, PACKETSIZE + 8, 0, (struct sockaddr *)&client, client_length) < 0) {
-      perror("Sending package error");
-		  return false;
-    }
-    return true;
+	if (dropPacket == true) return false; // Drop the bass
+	if (delayPacket == true) packet.setAckNack(1); // If it's a delay, we'll deal with that on the client
+  const char * pack = (const char *)packet.str(); // Get a string of the packet
+  cout << "Packet: " << pack << endl; // Let's see it
+  if(sendto(sock, pack, PACKETSIZE + 8, 0, (struct sockaddr *)&client, client_length) < 0) { // Send it over
+    perror("Sending package error");
+	  return false;
+  }
+  return true;
 }
 bool isAck() {
-    cout << endl << "Responding" << endl;
+  cout << "====================" << endl << "Evaluating Received Data" << endl << "===================" << endl;
     cout << "Data: " << buffer << endl;
     if(buffer[6] == '\0') return true;
     else return false;

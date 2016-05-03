@@ -202,8 +202,8 @@ bool getFile(string fn){
       cout << "ACK " << base << endl;
 
   	  if(packet[6] == '1') {
-        usleep(delayT*1000);
         cout << "============================================" << endl << "DELAYING" << endl << "============================================" << endl;
+        usleep(delayT*1000);
       }
 
 	     string wbs = to_string((long long)base); // String of base
